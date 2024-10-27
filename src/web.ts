@@ -1,6 +1,7 @@
 import { WebPlugin } from '@capacitor/core';
 
 import type { GooglePayPlugin } from './definitions';
+import {PluginListenerHandle} from "@capacitor/core/types/definitions";
 
 export class GooglePayWeb extends WebPlugin implements GooglePayPlugin {
 
@@ -53,6 +54,17 @@ export class GooglePayWeb extends WebPlugin implements GooglePayPlugin {
   }
 
   registerDataChangedListener(): Promise<any> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  // @ts-ignore
+  addListener(eventName: string, listenerFunc: (...args: any[]) => any): Promise<PluginListenerHandle>{
+    console.log(eventName)
+    console.log(listenerFunc)
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  removeAllListeners(): Promise<void>{
     throw this.unimplemented('Not implemented on web.');
   }
 }

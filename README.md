@@ -22,7 +22,7 @@ npx cap sync
 
 <docgen-index>
 
-* [`addListener('registerDataChangedListener', ...)`](#addlistenerregisterdatachangedlistener)
+* [`addListener('registerDataChangedListener', ...)`](#addlistenerregisterdatachangedlistener-)
 * [`removeAllListeners()`](#removealllisteners)
 * [`getEnvironment()`](#getenvironment)
 * [`getStableHardwareId()`](#getstablehardwareid)
@@ -77,12 +77,12 @@ removeAllListeners() => void
 ### getEnvironment()
 
 ```typescript
-getEnvironment() => any
+getEnvironment() => Promise<{ value: 'PROD' | 'SANDBOX' | 'DEV'; }>
 ```
 
 returns the environment (e.g. production or sandbox)
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ value: 'PROD' | 'SANDBOX' | 'DEV'; }&gt;</code>
 
 **Since:** 1.0.0
 
@@ -92,12 +92,12 @@ returns the environment (e.g. production or sandbox)
 ### getStableHardwareId()
 
 ```typescript
-getStableHardwareId() => any
+getStableHardwareId() => Promise<{ hardwareId: string; }>
 ```
 
 returns the stable hardware ID of the device
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ hardwareId: string; }&gt;</code>
 
 **Since:** 1.0.0
 
@@ -107,12 +107,12 @@ returns the stable hardware ID of the device
 ### getActiveWalletID()
 
 ```typescript
-getActiveWalletID() => any
+getActiveWalletID() => Promise<{ walletId: string; }>
 ```
 
 returns the ID of the active wallet
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ walletId: string; }&gt;</code>
 
 **Since:** 1.0.0
 
@@ -122,12 +122,12 @@ returns the ID of the active wallet
 ### createWallet()
 
 ```typescript
-createWallet() => any
+createWallet() => Promise<{ isCreated: boolean; }>
 ```
 
 Initializes create wallet
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ isCreated: boolean; }&gt;</code>
 
 **Since:** 4.0.1
 
@@ -137,7 +137,7 @@ Initializes create wallet
 ### getTokenStatus(...)
 
 ```typescript
-getTokenStatus(options: GooglePayTokenOptions) => any
+getTokenStatus(options: GooglePayTokenOptions) => Promise<{ state: TokenStatusReference; code: string; }>
 ```
 
 returns the status of a token with a given token ID
@@ -146,7 +146,7 @@ returns the status of a token with a given token ID
 | ------------- | ----------------------------------------------------------------------- | ------------- |
 | **`options`** | <code><a href="#googlepaytokenoptions">GooglePayTokenOptions</a></code> | Token Options |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ state: <a href="#tokenstatusreference">TokenStatusReference</a>; code: string; }&gt;</code>
 
 **Since:** 1.0.0
 
@@ -156,12 +156,12 @@ returns the status of a token with a given token ID
 ### listTokens()
 
 ```typescript
-listTokens() => any
+listTokens() => Promise<{ tokens: string[]; }>
 ```
 
 returns a list of tokens registered to the active wallet
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ tokens: string[]; }&gt;</code>
 
 **Since:** 1.0.0
 
@@ -171,7 +171,7 @@ returns a list of tokens registered to the active wallet
 ### isTokenized(...)
 
 ```typescript
-isTokenized(options: GooglePayIsTokenizedOptions) => any
+isTokenized(options: GooglePayIsTokenizedOptions) => Promise<{ isTokenized: boolean; }>
 ```
 
 Starts the push tokenization flow
@@ -180,7 +180,7 @@ Starts the push tokenization flow
 | ------------- | ----------------------------------------------------------------------------------- |
 | **`options`** | <code><a href="#googlepayistokenizedoptions">GooglePayIsTokenizedOptions</a></code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ isTokenized: boolean; }&gt;</code>
 
 **Since:** 1.0.0
 
@@ -190,7 +190,7 @@ Starts the push tokenization flow
 ### pushProvision(...)
 
 ```typescript
-pushProvision(options: GooglePayProvisionOptions) => any
+pushProvision(options: GooglePayProvisionOptions) => Promise<{ tokenId: string; }>
 ```
 
 Starts the push tokenization flow
@@ -199,7 +199,7 @@ Starts the push tokenization flow
 | ------------- | ------------------------------------------------------------------------------- |
 | **`options`** | <code><a href="#googlepayprovisionoptions">GooglePayProvisionOptions</a></code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ tokenId: string; }&gt;</code>
 
 **Since:** 1.0.0
 
@@ -209,7 +209,7 @@ Starts the push tokenization flow
 ### requestSelectToken(...)
 
 ```typescript
-requestSelectToken(options: GooglePayTokenOptions) => any
+requestSelectToken(options: GooglePayTokenOptions) => Promise<{ isSuccess: boolean; }>
 ```
 
 Requests setting token as default in Google Pay
@@ -218,7 +218,7 @@ Requests setting token as default in Google Pay
 | ------------- | ----------------------------------------------------------------------- | ------------- |
 | **`options`** | <code><a href="#googlepaytokenoptions">GooglePayTokenOptions</a></code> | Token Options |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ isSuccess: boolean; }&gt;</code>
 
 **Since:** 1.0.0
 
@@ -228,7 +228,7 @@ Requests setting token as default in Google Pay
 ### requestDeleteToken(...)
 
 ```typescript
-requestDeleteToken(options: GooglePayTokenOptions) => any
+requestDeleteToken(options: GooglePayTokenOptions) => Promise<{ isSuccess: boolean; }>
 ```
 
 Requests deleting token from Google Pay
@@ -237,7 +237,7 @@ Requests deleting token from Google Pay
 | ------------- | ----------------------------------------------------------------------- | ------------- |
 | **`options`** | <code><a href="#googlepaytokenoptions">GooglePayTokenOptions</a></code> | Token Options |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ isSuccess: boolean; }&gt;</code>
 
 **Since:** 4.0.13
 
@@ -247,12 +247,12 @@ Requests deleting token from Google Pay
 ### isGPayDefaultNFCApp()
 
 ```typescript
-isGPayDefaultNFCApp() => any
+isGPayDefaultNFCApp() => Promise<{ isDefault: boolean; isNFCOn: boolean; }>
 ```
 
 Check if Google Pay is Default NFC payment App
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ isDefault: boolean; isNFCOn: boolean; }&gt;</code>
 
 **Since:** 4.0.4
 
@@ -262,12 +262,12 @@ Check if Google Pay is Default NFC payment App
 ### setGPayAsDefaultNFCApp()
 
 ```typescript
-setGPayAsDefaultNFCApp() => any
+setGPayAsDefaultNFCApp() => Promise<{ isDefault: boolean; }>
 ```
 
 Sets Google Pay as Default NFC payment App
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ isDefault: boolean; }&gt;</code>
 
 **Since:** 4.0.4
 
@@ -277,12 +277,12 @@ Sets Google Pay as Default NFC payment App
 ### registerDataChangedListener()
 
 ```typescript
-registerDataChangedListener() => any
+registerDataChangedListener() => Promise<any>
 ```
 
 returns the status of a token with a given token ID
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;any&gt;</code>
 
 **Since:** 1.0.0
 
@@ -294,9 +294,9 @@ returns the status of a token with a given token ID
 
 #### PluginListenerHandle
 
-| Prop         | Type                      |
-| ------------ | ------------------------- |
-| **`remove`** | <code>() =&gt; any</code> |
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 
 #### GooglePayTokenOptions
