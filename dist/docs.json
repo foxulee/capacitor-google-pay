@@ -1,0 +1,684 @@
+{
+  "api": {
+    "name": "GooglePayPlugin",
+    "slug": "googlepayplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'registerDataChangedListener', listenerFunc: (response: any) => void) => PluginListenerHandle",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "pushNotificationActionPerformed.",
+            "type": "'registerDataChangedListener'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "callback with the notification action.",
+            "type": "(response: any) => void"
+          }
+        ],
+        "returns": "PluginListenerHandle",
+        "tags": [
+          {
+            "name": "param",
+            "text": "eventName pushNotificationActionPerformed."
+          },
+          {
+            "name": "param",
+            "text": "listenerFunc callback with the notification action."
+          },
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "Event called when an action is performed on a pusn notification.",
+        "complexTypes": [
+          "PluginListenerHandle"
+        ],
+        "slug": "addlistenerregisterdatachangedlistener-"
+      },
+      {
+        "name": "removeAllListeners",
+        "signature": "() => void",
+        "parameters": [],
+        "returns": "void",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "removealllisteners"
+      },
+      {
+        "name": "getEnvironment",
+        "signature": "() => Promise<{ value: 'PROD' | 'SANDBOX' | 'DEV'; }>",
+        "parameters": [],
+        "returns": "Promise<{ value: 'PROD' | 'SANDBOX' | 'DEV'; }>",
+        "tags": [
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "returns the environment (e.g. production or sandbox)",
+        "complexTypes": [],
+        "slug": "getenvironment"
+      },
+      {
+        "name": "getStableHardwareId",
+        "signature": "() => Promise<{ hardwareId: string; }>",
+        "parameters": [],
+        "returns": "Promise<{ hardwareId: string; }>",
+        "tags": [
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "returns the stable hardware ID of the device",
+        "complexTypes": [],
+        "slug": "getstablehardwareid"
+      },
+      {
+        "name": "getActiveWalletID",
+        "signature": "() => Promise<{ walletId: string; }>",
+        "parameters": [],
+        "returns": "Promise<{ walletId: string; }>",
+        "tags": [
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "returns the ID of the active wallet",
+        "complexTypes": [],
+        "slug": "getactivewalletid"
+      },
+      {
+        "name": "createWallet",
+        "signature": "() => Promise<{ isCreated: boolean; }>",
+        "parameters": [],
+        "returns": "Promise<{ isCreated: boolean; }>",
+        "tags": [
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "4.0.1"
+          }
+        ],
+        "docs": "Initializes create wallet",
+        "complexTypes": [],
+        "slug": "createwallet"
+      },
+      {
+        "name": "getTokenStatus",
+        "signature": "(options: GooglePayTokenOptions) => Promise<{ state: TokenStatusReference; code: string; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "Token Options",
+            "type": "GooglePayTokenOptions"
+          }
+        ],
+        "returns": "Promise<{ state: TokenStatusReference; code: string; }>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "options Token Options"
+          },
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "returns the status of a token with a given token ID",
+        "complexTypes": [
+          "TokenStatusReference",
+          "GooglePayTokenOptions"
+        ],
+        "slug": "gettokenstatus"
+      },
+      {
+        "name": "listTokens",
+        "signature": "() => Promise<{ tokens: string[]; }>",
+        "parameters": [],
+        "returns": "Promise<{ tokens: string[]; }>",
+        "tags": [
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "returns a list of tokens registered to the active wallet",
+        "complexTypes": [],
+        "slug": "listtokens"
+      },
+      {
+        "name": "isTokenized",
+        "signature": "(options: GooglePayIsTokenizedOptions) => Promise<{ isTokenized: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "GooglePayIsTokenizedOptions"
+          }
+        ],
+        "returns": "Promise<{ isTokenized: boolean; }>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "options.tsp Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider)."
+          },
+          {
+            "name": "param",
+            "text": "options.lastDigits Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider)."
+          },
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "Starts the push tokenization flow",
+        "complexTypes": [
+          "GooglePayIsTokenizedOptions"
+        ],
+        "slug": "istokenized"
+      },
+      {
+        "name": "pushProvision",
+        "signature": "(options: GooglePayProvisionOptions) => Promise<{ tokenId: string; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "GooglePayProvisionOptions"
+          }
+        ],
+        "returns": "Promise<{ tokenId: string; }>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "options.opc Sets Opaque Payment Card binary data."
+          },
+          {
+            "name": "param",
+            "text": "options.tsp Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider)."
+          },
+          {
+            "name": "param",
+            "text": "options.clientName Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider)."
+          },
+          {
+            "name": "param",
+            "text": "options.lastDigits Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider)."
+          },
+          {
+            "name": "param",
+            "text": "options.address Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider)."
+          },
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "Starts the push tokenization flow",
+        "complexTypes": [
+          "GooglePayProvisionOptions"
+        ],
+        "slug": "pushprovision"
+      },
+      {
+        "name": "requestSelectToken",
+        "signature": "(options: GooglePayTokenOptions) => Promise<{ isSuccess: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "Token Options",
+            "type": "GooglePayTokenOptions"
+          }
+        ],
+        "returns": "Promise<{ isSuccess: boolean; }>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "options Token Options"
+          },
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "Requests setting token as default in Google Pay",
+        "complexTypes": [
+          "GooglePayTokenOptions"
+        ],
+        "slug": "requestselecttoken"
+      },
+      {
+        "name": "requestDeleteToken",
+        "signature": "(options: GooglePayTokenOptions) => Promise<{ isSuccess: boolean; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "Token Options",
+            "type": "GooglePayTokenOptions"
+          }
+        ],
+        "returns": "Promise<{ isSuccess: boolean; }>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "options Token Options"
+          },
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "4.0.13"
+          }
+        ],
+        "docs": "Requests deleting token from Google Pay",
+        "complexTypes": [
+          "GooglePayTokenOptions"
+        ],
+        "slug": "requestdeletetoken"
+      },
+      {
+        "name": "isGPayDefaultNFCApp",
+        "signature": "() => Promise<{ isDefault: boolean; isNFCOn: boolean; }>",
+        "parameters": [],
+        "returns": "Promise<{ isDefault: boolean; isNFCOn: boolean; }>",
+        "tags": [
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "4.0.4"
+          }
+        ],
+        "docs": "Check if Google Pay is Default NFC payment App",
+        "complexTypes": [],
+        "slug": "isgpaydefaultnfcapp"
+      },
+      {
+        "name": "setGPayAsDefaultNFCApp",
+        "signature": "() => Promise<{ isDefault: boolean; }>",
+        "parameters": [],
+        "returns": "Promise<{ isDefault: boolean; }>",
+        "tags": [
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "4.0.4"
+          }
+        ],
+        "docs": "Sets Google Pay as Default NFC payment App",
+        "complexTypes": [],
+        "slug": "setgpayasdefaultnfcapp"
+      },
+      {
+        "name": "registerDataChangedListener",
+        "signature": "() => Promise<any>",
+        "parameters": [],
+        "returns": "Promise<any>",
+        "tags": [
+          {
+            "name": "return"
+          },
+          {
+            "name": "since",
+            "text": "1.0.0"
+          }
+        ],
+        "docs": "returns the status of a token with a given token ID",
+        "complexTypes": [],
+        "slug": "registerdatachangedlistener"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "PluginListenerHandle",
+      "slug": "pluginlistenerhandle",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "remove",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "() => Promise<void>"
+        }
+      ]
+    },
+    {
+      "name": "GooglePayTokenOptions",
+      "slug": "googlepaytokenoptions",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "tsp",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "tokenReferenceId",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "token registered to the active wallet",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "GooglePayIsTokenizedOptions",
+      "slug": "googlepayistokenizedoptions",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "tsp",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "lastDigits",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the lastDigits that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "GooglePayProvisionOptions",
+      "slug": "googlepayprovisionoptions",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "opc",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets Opaque Payment Card binary data.",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "tsp",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "clientName",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the clientName that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "lastDigits",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the lastDigits that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "address",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the address that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [
+            "GooglePayAddress"
+          ],
+          "type": "GooglePayAddress"
+        }
+      ]
+    },
+    {
+      "name": "GooglePayAddress",
+      "slug": "googlepayaddress",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "name",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Address name",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "address1",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Full address",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "address2",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Apartment/Office",
+          "complexTypes": [],
+          "type": "string | undefined"
+        },
+        {
+          "name": "locality",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Locality",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "administrativeArea",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Administrative area",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "countryCode",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Country code",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "postalCode",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Postal code",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "phoneNumber",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Phone number",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "enums": [
+    {
+      "name": "TokenStatusReference",
+      "slug": "tokenstatusreference",
+      "members": [
+        {
+          "name": "TOKEN_STATE_UNTOKENIZED",
+          "value": "1",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TOKEN_STATE_PENDING",
+          "value": "2",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION",
+          "value": "3",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TOKEN_STATE_SUSPENDED",
+          "value": "4",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TOKEN_STATE_ACTIVE",
+          "value": "5",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TOKEN_STATE_FELICA_PENDING_PROVISIONING",
+          "value": "6",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "TOKEN_STATE_NOT_FOUND",
+          "value": "-1",
+          "tags": [],
+          "docs": ""
+        }
+      ]
+    }
+  ],
+  "typeAliases": [],
+  "pluginConfigs": []
+}
