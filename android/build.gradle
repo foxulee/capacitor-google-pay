@@ -42,22 +42,22 @@ android {
     }
 }
 
-Properties properties = new Properties()
-if (rootProject.file("local.properties").exists()) {
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-}
-
-resValue "string", "sdk_dir", properties.getProperty("sdk.dir", "")
-
-//def sdkDir = properties.getProperty('sdk.dir')
-def sdkDir = getString(R.string.sdk_dir);
+// Properties properties = new Properties()
+// if (rootProject.file("local.properties").exists()) {
+//     properties.load(project.rootProject.file('local.properties').newDataInputStream())
+// }
+//
+// resValue "string", "sdk_dir", properties.getProperty("sdk.dir", "")
+//
+// //def sdkDir = properties.getProperty('sdk.dir')
+// def sdkDir = getString(R.string.sdk_dir);
 
 repositories {
     gradlePluginPortal()
     google()
-    maven {
-        url "$sdkDir/extras/google/m2repository"
-    }
+//     maven {
+//         url "$sdkDir/extras/google/m2repository"
+//     }
 }
 
 
