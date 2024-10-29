@@ -43,8 +43,14 @@ android {
 }
 
 Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def sdkDir = properties.getProperty('sdk.dir')
+if (rootProject.file("local.properties").exists()) {
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+}
+
+resValue "string", "sdk_dir", properties.getProperty("sdk.dir", "")
+
+//def sdkDir = properties.getProperty('sdk.dir')
+def sdkDir = getString(R.string.sdk_dir);
 
 repositories {
     gradlePluginPortal()
