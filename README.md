@@ -48,7 +48,7 @@ npx cap sync
 ### addListener('registerDataChangedListener', ...)
 
 ```typescript
-addListener(eventName: 'registerDataChangedListener', listenerFunc: (response: any) => void) => PluginListenerHandle
+addListener(eventName: 'registerDataChangedListener', listenerFunc: (response: any) => void) => Promise<PluginListenerHandle>
 ```
 
 Event called when an action is performed on a pusn notification.
@@ -58,7 +58,7 @@ Event called when an action is performed on a pusn notification.
 | **`eventName`**    | <code>'registerDataChangedListener'</code> | pushNotificationActionPerformed.       |
 | **`listenerFunc`** | <code>(response: any) =&gt; void</code>    | callback with the notification action. |
 
-**Returns:** <code><a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 1.0.0
 

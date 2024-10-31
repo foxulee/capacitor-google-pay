@@ -137,7 +137,7 @@ export interface GooglePayPlugin {
      *
      * @since 1.0.0
      */
-    addListener(eventName: 'registerDataChangedListener', listenerFunc: (response: any) => void): PluginListenerHandle;
+    addListener(eventName: 'registerDataChangedListener', listenerFunc: (response: any) => void): Promise<PluginListenerHandle>;
     removeAllListeners(): void;
     /**
      * returns the environment (e.g. production or sandbox)

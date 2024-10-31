@@ -69,7 +69,6 @@ class GooglePayWeb extends core.WebPlugin {
     registerDataChangedListener() {
         throw this.unimplemented('Not implemented on web.');
     }
-    // @ts-ignore
     addListener(eventName, listenerFunc) {
         console.log(eventName);
         console.log(listenerFunc);

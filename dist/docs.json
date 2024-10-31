@@ -7,7 +7,7 @@
     "methods": [
       {
         "name": "addListener",
-        "signature": "(eventName: 'registerDataChangedListener', listenerFunc: (response: any) => void) => PluginListenerHandle",
+        "signature": "(eventName: 'registerDataChangedListener', listenerFunc: (response: any) => void) => Promise<PluginListenerHandle>",
         "parameters": [
           {
             "name": "eventName",
@@ -20,7 +20,7 @@
             "type": "(response: any) => void"
           }
         ],
-        "returns": "PluginListenerHandle",
+        "returns": "Promise<PluginListenerHandle>",
         "tags": [
           {
             "name": "param",

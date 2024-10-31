@@ -57,8 +57,7 @@ export class GooglePayWeb extends WebPlugin implements GooglePayPlugin {
     throw this.unimplemented('Not implemented on web.');
   }
 
-  // @ts-ignore
-  addListener(eventName: string, listenerFunc: (...args: any[]) => any): Promise<PluginListenerHandle>{
+  addListener(eventName: "registerDataChangedListener", listenerFunc: (response: any) => void): Promise<PluginListenerHandle>{
     console.log(eventName)
     console.log(listenerFunc)
     throw this.unimplemented('Not implemented on web.');

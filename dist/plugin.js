@@ -68,7 +68,6 @@ var capacitorGooglePay = (function (exports, core) {
         registerDataChangedListener() {
             throw this.unimplemented('Not implemented on web.');
         }
-        // @ts-ignore
         addListener(eventName, listenerFunc) {
             console.log(eventName);
             console.log(listenerFunc);
