@@ -74,6 +74,6 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 
-    implementation 'com.google.android.gms:play-services-tapandpay:18.7.0'
+//     implementation 'com.google.android.gms:play-services-tapandpay:18.7.0'
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.1'
 }
