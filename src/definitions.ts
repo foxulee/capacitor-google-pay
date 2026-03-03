@@ -1,6 +1,6 @@
 import type { PluginListenerHandle } from '@capacitor/core';
 
-export enum ErrorCodeReference {
+export declare enum ErrorCodeReference {
   PUSH_PROVISION_ERROR = -1,
   PUSH_PROVISION_CANCEL = -2,
   MISSING_DATA_ERROR = -3,
@@ -15,7 +15,7 @@ export enum ErrorCodeReference {
   ERROR_CODE_CARD_EXISTS_IN_WALLET = 3,
 }
 
-export enum TokenStatusReference {
+export declare enum TokenStatusReference {
   TOKEN_STATE_UNTOKENIZED = 1,
   TOKEN_STATE_PENDING = 2,
   TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION = 3,
