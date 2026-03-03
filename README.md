@@ -39,8 +39,8 @@ npx cap sync
 * [`isGPayDefaultNFCApp()`](#isgpaydefaultnfcapp)
 * [`setGPayAsDefaultNFCApp()`](#setgpayasdefaultnfcapp)
 * [`registerDataChangedListener()`](#registerdatachangedlistener)
-* [`getWalletInformation()`](#getwalletinformation)
-* [`pushToWallet()`](#pushtowallet)
+* [`getWalletInformation(...)`](#getwalletinformation)
+* [`pushToWallet(...)`](#pushtowallet)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 * [Enums](#enums)
@@ -334,22 +334,30 @@ returns the status of a token with a given token ID
 --------------------
 
 
-### getWalletInformation()
+### getWalletInformation(...)
 
 ```typescript
-getWalletInformation() => Promise<any>
+getWalletInformation(option: GoogleWalletRequest) => Promise<any>
 ```
+
+| Param        | Type                                                                |
+| ------------ | ------------------------------------------------------------------- |
+| **`option`** | <code><a href="#googlewalletrequest">GoogleWalletRequest</a></code> |
 
 **Returns:** <code>Promise&lt;any&gt;</code>
 
 --------------------
 
 
-### pushToWallet()
+### pushToWallet(...)
 
 ```typescript
-pushToWallet() => Promise<any>
+pushToWallet(option: { response: string; }) => Promise<any>
 ```
+
+| Param        | Type                               |
+| ------------ | ---------------------------------- |
+| **`option`** | <code>{ response: string; }</code> |
 
 **Returns:** <code>Promise&lt;any&gt;</code>
 
@@ -405,6 +413,16 @@ pushToWallet() => Promise<any>
 | **`countryCode`**        | <code>string</code> | Country code        | 1.0.0 |
 | **`postalCode`**         | <code>string</code> | Postal code         | 1.0.0 |
 | **`phoneNumber`**        | <code>string</code> | Phone number        | 1.0.0 |
+
+
+#### GoogleWalletRequest
+
+| Prop                  | Type                | Description                                                                                           | Since |
+| --------------------- | ------------------- | ----------------------------------------------------------------------------------------------------- | ----- |
+| **`paymentNetwork`**  | <code>string</code> | Sets the Payment Network that should be used for the tokenization attempt (see TokenServiceProvider). | 1.0.0 |
+| **`cardHolderName`**  | <code>string</code> | Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider). | 1.0.0 |
+| **`cardNickName`**    | <code>string</code> | Sets the Card Nickname that should be used for the tokenization attempt (see TokenServiceProvider).   | 1.0.0 |
+| **`last4CardNumber`** | <code>string</code> | Sets the Card Last4 that should be used for the tokenization attempt (see TokenServiceProvider).      | 1.0.0 |
 
 
 ### Type Aliases

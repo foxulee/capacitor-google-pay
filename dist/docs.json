@@ -442,18 +442,32 @@
       },
       {
         "name": "getWalletInformation",
-        "signature": "() => Promise<any>",
-        "parameters": [],
+        "signature": "(option: GoogleWalletRequest) => Promise<any>",
+        "parameters": [
+          {
+            "name": "option",
+            "docs": "",
+            "type": "GoogleWalletRequest"
+          }
+        ],
         "returns": "Promise<any>",
         "tags": [],
         "docs": "",
-        "complexTypes": [],
+        "complexTypes": [
+          "GoogleWalletRequest"
+        ],
         "slug": "getwalletinformation"
       },
       {
         "name": "pushToWallet",
-        "signature": "() => Promise<any>",
-        "parameters": [],
+        "signature": "(option: { response: string; }) => Promise<any>",
+        "parameters": [
+          {
+            "name": "option",
+            "docs": "",
+            "type": "{ response: string; }"
+          }
+        ],
         "returns": "Promise<any>",
         "tags": [],
         "docs": "",
@@ -717,6 +731,63 @@
             }
           ],
           "docs": "Phone number",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "GoogleWalletRequest",
+      "slug": "googlewalletrequest",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "paymentNetwork",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the Payment Network that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "cardHolderName",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "cardNickName",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the Card Nickname that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "last4CardNumber",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the Card Last4 that should be used for the tokenization attempt (see TokenServiceProvider).",
           "complexTypes": [],
           "type": "string"
         }

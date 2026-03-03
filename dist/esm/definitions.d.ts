@@ -115,6 +115,32 @@ export interface GooglePayIsTokenizedOptions {
      */
     lastDigits: string;
 }
+export interface GoogleWalletRequest {
+    /**
+     * Sets the Payment Network that should be used for the tokenization attempt (see TokenServiceProvider).
+     *
+     * @since 1.0.0
+     */
+    paymentNetwork: string;
+    /**
+     * Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider).
+     *
+     * @since 1.0.0
+     */
+    cardHolderName: string;
+    /**
+     * Sets the Card Nickname that should be used for the tokenization attempt (see TokenServiceProvider).
+     *
+     * @since 1.0.0
+     */
+    cardNickName: string;
+    /**
+     * Sets the Card Last4 that should be used for the tokenization attempt (see TokenServiceProvider).
+     *
+     * @since 1.0.0
+     */
+    last4CardNumber: string;
+}
 export interface GooglePayTokenOptions {
     /**
      * Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider).
@@ -290,6 +316,8 @@ export interface GooglePayPlugin {
      * @since 1.0.0
      */
     registerDataChangedListener(): Promise<any>;
-    getWalletInformation(): Promise<any>;
-    pushToWallet(): Promise<any>;
+    getWalletInformation(option: GoogleWalletRequest): Promise<any>;
+    pushToWallet(option: {
+        response: string;
+    }): Promise<any>;
 }
