@@ -450,14 +450,18 @@ Construct a type with a set of properties K of type T
 
 #### TokenStatusReference
 
-| Members                                       | Value           |
-| --------------------------------------------- | --------------- |
-| **`TOKEN_STATE_UNTOKENIZED`**                 | <code>1</code>  |
-| **`TOKEN_STATE_PENDING`**                     | <code>2</code>  |
-| **`TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION`** | <code>3</code>  |
-| **`TOKEN_STATE_SUSPENDED`**                   | <code>4</code>  |
-| **`TOKEN_STATE_ACTIVE`**                      | <code>5</code>  |
-| **`TOKEN_STATE_FELICA_PENDING_PROVISIONING`** | <code>6</code>  |
-| **`TOKEN_STATE_NOT_FOUND`**                   | <code>-1</code> |
+| Members                                       | Value            |
+| --------------------------------------------- | ---------------- |
+| **`TOKEN_STATE_UNTOKENIZED`**                 | <code>1</code>   |
+| **`TOKEN_STATE_PENDING`**                     | <code>2</code>   |
+| **`TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION`** | <code>3</code>   |
+| **`TOKEN_STATE_SUSPENDED`**                   | <code>4</code>   |
+| **`TOKEN_STATE_ACTIVE`**                      | <code>5</code>   |
+| **`TOKEN_STATE_FELICA_PENDING_PROVISIONING`** | <code>6</code>   |
+| **`TOKEN_STATE_NOT_FOUND`**                   | <code>-1</code>  |
+| **`REQUEST_CREATE_WALLET`**                   | <code>100</code> |
+| **`REQUEST_CODE_PUSH_TOKENIZE`**              | <code>200</code> |
+| **`REQUEST_WALLET_INFORMATION`**              | <code>300</code> |
+| **`EXCEPTION_TOKEN_PENDING_STATE`**           | <code>400</code> |
 
 </docgen-api>

@@ -12,6 +12,9 @@ var capacitorGooglePay = (function (exports, core) {
         ErrorCodeReference[ErrorCodeReference["INVALID_TOKEN"] = -7] = "INVALID_TOKEN";
         ErrorCodeReference[ErrorCodeReference["SELECT_TOKEN_ERROR"] = -8] = "SELECT_TOKEN_ERROR";
         ErrorCodeReference[ErrorCodeReference["SET_DEFAULT_PAYMENTS_ERROR"] = -9] = "SET_DEFAULT_PAYMENTS_ERROR";
+        ErrorCodeReference[ErrorCodeReference["ERROR_CODE_JSON_FORMATTING_EXCEPTION"] = 1] = "ERROR_CODE_JSON_FORMATTING_EXCEPTION";
+        ErrorCodeReference[ErrorCodeReference["ERROR_CODE_WALLET_NOT_INTIALIZED"] = 2] = "ERROR_CODE_WALLET_NOT_INTIALIZED";
+        ErrorCodeReference[ErrorCodeReference["ERROR_CODE_CARD_EXISTS_IN_WALLET"] = 3] = "ERROR_CODE_CARD_EXISTS_IN_WALLET";
     })(exports.ErrorCodeReference || (exports.ErrorCodeReference = {}));
     exports.TokenStatusReference = void 0;
     (function (TokenStatusReference) {
@@ -22,6 +25,10 @@ var capacitorGooglePay = (function (exports, core) {
         TokenStatusReference[TokenStatusReference["TOKEN_STATE_ACTIVE"] = 5] = "TOKEN_STATE_ACTIVE";
         TokenStatusReference[TokenStatusReference["TOKEN_STATE_FELICA_PENDING_PROVISIONING"] = 6] = "TOKEN_STATE_FELICA_PENDING_PROVISIONING";
         TokenStatusReference[TokenStatusReference["TOKEN_STATE_NOT_FOUND"] = -1] = "TOKEN_STATE_NOT_FOUND";
+        TokenStatusReference[TokenStatusReference["REQUEST_CREATE_WALLET"] = 100] = "REQUEST_CREATE_WALLET";
+        TokenStatusReference[TokenStatusReference["REQUEST_CODE_PUSH_TOKENIZE"] = 200] = "REQUEST_CODE_PUSH_TOKENIZE";
+        TokenStatusReference[TokenStatusReference["REQUEST_WALLET_INFORMATION"] = 300] = "REQUEST_WALLET_INFORMATION";
+        TokenStatusReference[TokenStatusReference["EXCEPTION_TOKEN_PENDING_STATE"] = 400] = "EXCEPTION_TOKEN_PENDING_STATE";
     })(exports.TokenStatusReference || (exports.TokenStatusReference = {}));
 
     const GooglePay = core.registerPlugin('GooglePay', {

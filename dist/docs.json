@@ -840,6 +840,30 @@
           "value": "-1",
           "tags": [],
           "docs": ""
+        },
+        {
+          "name": "REQUEST_CREATE_WALLET",
+          "value": "100",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "REQUEST_CODE_PUSH_TOKENIZE",
+          "value": "200",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "REQUEST_WALLET_INFORMATION",
+          "value": "300",
+          "tags": [],
+          "docs": ""
+        },
+        {
+          "name": "EXCEPTION_TOKEN_PENDING_STATE",
+          "value": "400",
+          "tags": [],
+          "docs": ""
         }
       ]
     }
