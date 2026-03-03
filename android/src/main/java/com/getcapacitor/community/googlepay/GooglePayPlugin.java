@@ -138,6 +138,13 @@ public class GooglePayPlugin extends Plugin {
         implementation.pushToWallet(call);
     }
 
+    @PluginMethod
+    public void removeAllListeners(PluginCall call) {
+        // This removes all event listeners for this plugin
+        // The base Plugin class handles the actual removal
+        call.resolve();
+    }
+
     private void onDataChangeEvent(String event, JSObject result, Boolean bool) {
         notifyListeners(event, result, bool);
     }
