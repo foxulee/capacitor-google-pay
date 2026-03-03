@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcManager;
 import android.nfc.cardemulation.CardEmulation;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -29,9 +30,14 @@ import com.google.android.gms.tapandpay.issuer.IsTokenizedRequest;
 import com.google.android.gms.tapandpay.issuer.PushTokenizeRequest;
 import com.google.android.gms.tapandpay.issuer.TokenInfo;
 import com.google.android.gms.tapandpay.issuer.UserAddress;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONObject;
 
+import com.google.gson.Gson;
+
+import java.util.List;
 import java.util.Objects;
 
 import android.text.TextUtils;
@@ -630,7 +636,7 @@ public class GooglePay {
         String paymentNetwork = call.getString("paymentNetwork");
         String cardHolderName = call.getString("cardHolderName");
         String cardNickName = call.getString("cardNickName");
-        JSONObject last4CardNumber = call.getString("last4CardNumber");
+        String last4CardNumber = call.getString("last4CardNumber");
         try{
             this.tapAndPay
                 .listTokens()

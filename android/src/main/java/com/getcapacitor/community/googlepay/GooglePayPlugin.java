@@ -2,6 +2,7 @@ package com.getcapacitor.community.googlepay;
 
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -133,7 +134,7 @@ public class GooglePayPlugin extends Plugin {
     }
 
     @PluginMethod
-    public void pushToWallet(PluginCall call) {
+    public void pushToWallet(PluginCall call) throws Exception {
         implementation.pushToWallet(call);
     }
 
