@@ -1,6 +1,6 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { GooglePayPlugin } from './definitions';
+import type {GooglePayFailureEvent, GooglePayPlugin, GooglePaySuccessEvent} from './definitions';
 import {PluginListenerHandle} from "@capacitor/core/types/definitions";
 
 export class GooglePayWeb extends WebPlugin implements GooglePayPlugin {
@@ -53,14 +53,40 @@ export class GooglePayWeb extends WebPlugin implements GooglePayPlugin {
     throw this.unimplemented('Not implemented on web.');
   }
 
+  getWalletInformation(): Promise<any> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  pushToWallet(): Promise<any> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
   registerDataChangedListener(): Promise<any> {
     throw this.unimplemented('Not implemented on web.');
   }
 
-  addListener(eventName: "registerDataChangedListener", listenerFunc: (response: any) => void): Promise<PluginListenerHandle>{
-    console.log(eventName)
-    console.log(listenerFunc)
-    throw this.unimplemented('Not implemented on web.');
+
+
+  // addListener(eventName: "registerDataChangedListener", listenerFunc: (response: any) => void): Promise<PluginListenerHandle>{
+  //   console.log(eventName)
+  //   console.log(listenerFunc)
+  //   throw this.unimplemented('Not implemented on web.');
+  // }
+
+  addListener(
+      eventName: 'onSuccessForGoogle',
+      listenerFunc: (event: GooglePaySuccessEvent) => void,
+  ): Promise<PluginListenerHandle>;
+  addListener(
+      eventName: 'onFailureForGoogle',
+      listenerFunc: (event: GooglePayFailureEvent) => void,
+  ): Promise<PluginListenerHandle>;
+  addListener(
+      eventName: 'registerDataChangedListener',
+      listenerFunc: (response: any) => void,
+  ): Promise<PluginListenerHandle>;
+  addListener(eventName: string, listenerFunc: (data: any) => void): Promise<PluginListenerHandle> {
+    return super.addListener(eventName, listenerFunc);
   }
 
   removeAllListeners(): Promise<void>{

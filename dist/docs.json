@@ -42,6 +42,80 @@
         "slug": "addlistenerregisterdatachangedlistener-"
       },
       {
+        "name": "addListener",
+        "signature": "(eventName: 'onSuccessForGoogle', listenerFunc: (event: GooglePaySuccessEvent) => void) => Promise<PluginListenerHandle>",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "actionPerformed.",
+            "type": "'onSuccessForGoogle'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "callback with the action.",
+            "type": "(event: GooglePaySuccessEvent) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "eventName actionPerformed."
+          },
+          {
+            "name": "param",
+            "text": "listenerFunc callback with the action."
+          },
+          {
+            "name": "since",
+            "text": "2.0.0"
+          }
+        ],
+        "docs": "Event called when an action is performed successfully on a Google wallet action.",
+        "complexTypes": [
+          "PluginListenerHandle",
+          "GooglePaySuccessEvent"
+        ],
+        "slug": "addlisteneronsuccessforgoogle-"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'onFailureForGoogle', listenerFunc: (event: GooglePayFailureEvent) => void) => Promise<PluginListenerHandle>",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "actionPerformed.",
+            "type": "'onFailureForGoogle'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "callback with the action.",
+            "type": "(event: GooglePayFailureEvent) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle>",
+        "tags": [
+          {
+            "name": "param",
+            "text": "eventName actionPerformed."
+          },
+          {
+            "name": "param",
+            "text": "listenerFunc callback with the action."
+          },
+          {
+            "name": "since",
+            "text": "2.0.0"
+          }
+        ],
+        "docs": "Event called when an action is performed unsuccessfully on a Google wallet action.",
+        "complexTypes": [
+          "PluginListenerHandle",
+          "GooglePayFailureEvent"
+        ],
+        "slug": "addlisteneronfailureforgoogle-"
+      },
+      {
         "name": "removeAllListeners",
         "signature": "() => void",
         "parameters": [],
@@ -365,6 +439,26 @@
         "docs": "returns the status of a token with a given token ID",
         "complexTypes": [],
         "slug": "registerdatachangedlistener"
+      },
+      {
+        "name": "getWalletInformation",
+        "signature": "() => Promise<any>",
+        "parameters": [],
+        "returns": "Promise<any>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "getwalletinformation"
+      },
+      {
+        "name": "pushToWallet",
+        "signature": "() => Promise<any>",
+        "parameters": [],
+        "returns": "Promise<any>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "pushtowallet"
       }
     ],
     "properties": []
@@ -679,6 +773,45 @@
       ]
     }
   ],
-  "typeAliases": [],
+  "typeAliases": [
+    {
+      "name": "GooglePaySuccessEvent",
+      "slug": "googlepaysuccessevent",
+      "docs": "",
+      "types": [
+        {
+          "text": "{\n  requestCode: number;\n  data: Record<string, string>;\n}",
+          "complexTypes": [
+            "Record"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Record",
+      "slug": "record",
+      "docs": "Construct a type with a set of properties K of type T",
+      "types": [
+        {
+          "text": "{\r\n    [P in K]: T;\r\n}",
+          "complexTypes": [
+            "K",
+            "T"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GooglePayFailureEvent",
+      "slug": "googlepayfailureevent",
+      "docs": "",
+      "types": [
+        {
+          "text": "{\n  errorCode: number;\n  message: string;\n}",
+          "complexTypes": []
+        }
+      ]
+    }
+  ],
   "pluginConfigs": []
 }

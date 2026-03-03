@@ -23,6 +23,8 @@ npx cap sync
 <docgen-index>
 
 * [`addListener('registerDataChangedListener', ...)`](#addlistenerregisterdatachangedlistener-)
+* [`addListener('onSuccessForGoogle', ...)`](#addlisteneronsuccessforgoogle-)
+* [`addListener('onFailureForGoogle', ...)`](#addlisteneronfailureforgoogle-)
 * [`removeAllListeners()`](#removealllisteners)
 * [`getEnvironment()`](#getenvironment)
 * [`getStableHardwareId()`](#getstablehardwareid)
@@ -37,7 +39,10 @@ npx cap sync
 * [`isGPayDefaultNFCApp()`](#isgpaydefaultnfcapp)
 * [`setGPayAsDefaultNFCApp()`](#setgpayasdefaultnfcapp)
 * [`registerDataChangedListener()`](#registerdatachangedlistener)
+* [`getWalletInformation()`](#getwalletinformation)
+* [`pushToWallet()`](#pushtowallet)
 * [Interfaces](#interfaces)
+* [Type Aliases](#type-aliases)
 * [Enums](#enums)
 
 </docgen-index>
@@ -61,6 +66,46 @@ Event called when an action is performed on a pusn notification.
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 1.0.0
+
+--------------------
+
+
+### addListener('onSuccessForGoogle', ...)
+
+```typescript
+addListener(eventName: 'onSuccessForGoogle', listenerFunc: (event: GooglePaySuccessEvent) => void) => Promise<PluginListenerHandle>
+```
+
+Event called when an action is performed successfully on a Google wallet action.
+
+| Param              | Type                                                                                        | Description               |
+| ------------------ | ------------------------------------------------------------------------------------------- | ------------------------- |
+| **`eventName`**    | <code>'onSuccessForGoogle'</code>                                                           | actionPerformed.          |
+| **`listenerFunc`** | <code>(event: <a href="#googlepaysuccessevent">GooglePaySuccessEvent</a>) =&gt; void</code> | callback with the action. |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+**Since:** 2.0.0
+
+--------------------
+
+
+### addListener('onFailureForGoogle', ...)
+
+```typescript
+addListener(eventName: 'onFailureForGoogle', listenerFunc: (event: GooglePayFailureEvent) => void) => Promise<PluginListenerHandle>
+```
+
+Event called when an action is performed unsuccessfully on a Google wallet action.
+
+| Param              | Type                                                                                        | Description               |
+| ------------------ | ------------------------------------------------------------------------------------------- | ------------------------- |
+| **`eventName`**    | <code>'onFailureForGoogle'</code>                                                           | actionPerformed.          |
+| **`listenerFunc`** | <code>(event: <a href="#googlepayfailureevent">GooglePayFailureEvent</a>) =&gt; void</code> | callback with the action. |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+**Since:** 2.0.0
 
 --------------------
 
@@ -289,6 +334,28 @@ returns the status of a token with a given token ID
 --------------------
 
 
+### getWalletInformation()
+
+```typescript
+getWalletInformation() => Promise<any>
+```
+
+**Returns:** <code>Promise&lt;any&gt;</code>
+
+--------------------
+
+
+### pushToWallet()
+
+```typescript
+pushToWallet() => Promise<any>
+```
+
+**Returns:** <code>Promise&lt;any&gt;</code>
+
+--------------------
+
+
 ### Interfaces
 
 
@@ -338,6 +405,26 @@ returns the status of a token with a given token ID
 | **`countryCode`**        | <code>string</code> | Country code        | 1.0.0 |
 | **`postalCode`**         | <code>string</code> | Postal code         | 1.0.0 |
 | **`phoneNumber`**        | <code>string</code> | Phone number        | 1.0.0 |
+
+
+### Type Aliases
+
+
+#### GooglePaySuccessEvent
+
+<code>{ requestCode: number; data: <a href="#record">Record</a>&lt;string, string&gt;; }</code>
+
+
+#### Record
+
+Construct a type with a set of properties K of type T
+
+<code>{ [P in K]: T; }</code>
+
+
+#### GooglePayFailureEvent
+
+<code>{ errorCode: number; message: string; }</code>
 
 
 ### Enums

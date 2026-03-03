@@ -36,13 +36,17 @@ export class GooglePayWeb extends WebPlugin {
     setGPayAsDefaultNFCApp() {
         throw this.unimplemented('Not implemented on web.');
     }
+    getWalletInformation() {
+        throw this.unimplemented('Not implemented on web.');
+    }
+    pushToWallet() {
+        throw this.unimplemented('Not implemented on web.');
+    }
     registerDataChangedListener() {
         throw this.unimplemented('Not implemented on web.');
     }
     addListener(eventName, listenerFunc) {
-        console.log(eventName);
-        console.log(listenerFunc);
-        throw this.unimplemented('Not implemented on web.');
+        return super.addListener(eventName, listenerFunc);
     }
     removeAllListeners() {
         throw this.unimplemented('Not implemented on web.');

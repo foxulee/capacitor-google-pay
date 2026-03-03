@@ -25,7 +25,38 @@ public class GooglePayPlugin extends Plugin {
     public void load() {
         implementation = new GooglePay(this.bridge);
         implementation.setDataChangeListener(this::onDataChangeEvent);
+
+//         add onSuccessForGoogle and onFailureForGoogle listeners
+        implementation.setGoogleUtilityListener(new GooglePay.GoogleUtilityListener() {
+                    @Override
+                    public void onSuccessForGoogle(int requestCode, Bundle data) {
+                        JSObject payload = new JSObject();
+                        payload.put("requestCode", requestCode);
+
+                        // Convert Bundle -> JSObject (simple/flat case)
+                        JSObject bundleObj = new JSObject();
+                        for (String key : data.keySet()) {
+                            Object v = data.get(key);
+                            if (v != null) bundleObj.put(key, v.toString());
+                        }
+                        payload.put("data", bundleObj);
+
+                        notifyListeners("onSuccessForGoogle", payload, true);
+                    }
+
+                    @Override
+                    public void onFailureForGoogle(int errorCode, String message) {
+                        JSObject payload = new JSObject();
+                        payload.put("errorCode", errorCode);
+                        payload.put("message", message);
+
+                        notifyListeners("onFailureForGoogle", payload, true);
+                    }
+                });
     }
+
+
+
 
     @Override
     public void handleOnActivityResult(int requestCode, int resultCode, Intent data) {
@@ -94,6 +125,16 @@ public class GooglePayPlugin extends Plugin {
     @PluginMethod
     public void registerDataChangedListener(PluginCall call) {
         implementation.registerDataChangedListener(call);
+    }
+
+    @PluginMethod
+    public void getWalletInformation(PluginCall call) {
+        implementation.getWalletInformation(call);
+    }
+
+    @PluginMethod
+    public void pushToWallet(PluginCall call) {
+        implementation.pushToWallet(call);
     }
 
     private void onDataChangeEvent(String event, JSObject result, Boolean bool) {

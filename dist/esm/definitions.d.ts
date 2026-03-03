@@ -129,6 +129,14 @@ export interface GooglePayTokenOptions {
      */
     tokenReferenceId: string;
 }
+export declare type GooglePaySuccessEvent = {
+    requestCode: number;
+    data: Record<string, string>;
+};
+export declare type GooglePayFailureEvent = {
+    errorCode: number;
+    message: string;
+};
 export interface GooglePayPlugin {
     /**
      * Event called when an action is performed on a pusn notification.
@@ -138,6 +146,22 @@ export interface GooglePayPlugin {
      * @since 1.0.0
      */
     addListener(eventName: 'registerDataChangedListener', listenerFunc: (response: any) => void): Promise<PluginListenerHandle>;
+    /**
+     * Event called when an action is performed successfully on a Google wallet action.
+     * @param eventName actionPerformed.
+     * @param listenerFunc callback with the action.
+     *
+     * @since 2.0.0
+     */
+    addListener(eventName: 'onSuccessForGoogle', listenerFunc: (event: GooglePaySuccessEvent) => void): Promise<PluginListenerHandle>;
+    /**
+     * Event called when an action is performed unsuccessfully on a Google wallet action.
+     * @param eventName actionPerformed.
+     * @param listenerFunc callback with the action.
+     *
+     * @since 2.0.0
+     */
+    addListener(eventName: 'onFailureForGoogle', listenerFunc: (event: GooglePayFailureEvent) => void): Promise<PluginListenerHandle>;
     removeAllListeners(): void;
     /**
      * returns the environment (e.g. production or sandbox)
@@ -266,4 +290,6 @@ export interface GooglePayPlugin {
      * @since 1.0.0
      */
     registerDataChangedListener(): Promise<any>;
+    getWalletInformation(): Promise<any>;
+    pushToWallet(): Promise<any>;
 }
