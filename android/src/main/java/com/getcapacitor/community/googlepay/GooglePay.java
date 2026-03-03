@@ -118,7 +118,10 @@ public class GooglePay {
         IS_TOKENIZED_ERROR(-5),
         ACTION_TOKEN_ERROR(-6),
         INVALID_TOKEN(-7),
-        SET_DEFAULT_PAYMENTS_ERROR(-9);
+        SET_DEFAULT_PAYMENTS_ERROR(-9),
+        ERROR_CODE_JSON_FORMATTING_EXCEPTION(1),
+        ERROR_CODE_WALLET_NOT_INTIALIZED(2),
+        ERROR_CODE_CARD_EXISTS_IN_WALLET(3);
 
         private final Integer code;
 
@@ -138,7 +141,11 @@ public class GooglePay {
         TOKEN_STATE_SUSPENDED(4),
         TOKEN_STATE_ACTIVE(5),
         TOKEN_STATE_FELICA_PENDING_PROVISIONING(6),
-        TOKEN_STATE_NOT_FOUND(-1);
+        TOKEN_STATE_NOT_FOUND(-1),
+        REQUEST_CREATE_WALLET(100),
+        REQUEST_CODE_PUSH_TOKENIZE(200),
+        REQUEST_WALLET_INFORMATION(300),
+        EXCEPTION_TOKEN_PENDING_STATE(400);
 
         public final int referenceId;
 
