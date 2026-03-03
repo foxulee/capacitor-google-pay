@@ -36,6 +36,10 @@ import com.google.android.gms.tasks.Task;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.nio.charset.StandardCharsets;
 
 import java.util.List;
 import java.util.Objects;
@@ -72,7 +76,7 @@ public class GooglePay {
     private final Bridge bridge;
     public String callBackId;
     public String dataChangeCallBackId;
-    protected static final int REQUEST_CODE_PUSH_TOKENIZE = 3;
+    // protected static final int REQUEST_CODE_PUSH_TOKENIZE = 3;
     protected static final int REQUEST_CODE_CREATE_WALLET = 4;
     protected static final int REQUEST_CODE_ACTION_TOKEN = 5;
     protected static final int RESULT_CANCELED = 0;
@@ -100,7 +104,11 @@ public class GooglePay {
     //Internal error
     private static final String ERROR_MESSAGE_ENCODING_STRING_EMPTY = "String empty for encoding";
     private static final String ERROR_MESSAGE_DECODING_STRING_EMPTY = "String empty for decoding";
-
+    private static final String GOOGLE_PAY = "Google_Pay";
+    private static final String VISA = "VISA";
+    private static final String AMEX = "AMEX";
+    private static final String DISCOVER = "DISCOVER";
+    private static final String MASTERCARD = "MASTERCARD";
 
     public enum ErrorCodeReference {
         PUSH_PROVISION_ERROR(-1),
@@ -729,7 +737,7 @@ public class GooglePay {
                         public void onComplete(@NonNull Task<String> task) {
                             if (task.isSuccessful()) {
                                 final String walletId = task.getResult();
-                                this.tapAndPay
+                                GooglePay.this.tapAndPay
                                         .getStableHardwareId()
                                         .addOnCompleteListener(
                                                 new OnCompleteListener<String>() {
