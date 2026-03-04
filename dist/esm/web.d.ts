@@ -14,8 +14,9 @@ export declare class GooglePayWeb extends WebPlugin implements GooglePayPlugin {
     requestDeleteToken(): Promise<any>;
     isGPayDefaultNFCApp(): Promise<any>;
     setGPayAsDefaultNFCApp(): Promise<any>;
-    getWalletInformation(): Promise<any>;
-    pushToWallet(): Promise<any>;
+    getGoogleWalletInformation(): Promise<any>;
+    continuePendingTokenize(): Promise<any>;
+    pushToGoogleWallet(): Promise<any>;
     registerDataChangedListener(): Promise<any>;
     addListener(eventName: 'onSuccessForGoogle', listenerFunc: (event: GooglePaySuccessEvent) => void): Promise<PluginListenerHandle>;
     addListener(eventName: 'onFailureForGoogle', listenerFunc: (event: GooglePayFailureEvent) => void): Promise<PluginListenerHandle>;

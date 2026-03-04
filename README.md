@@ -39,8 +39,9 @@ npx cap sync
 * [`isGPayDefaultNFCApp()`](#isgpaydefaultnfcapp)
 * [`setGPayAsDefaultNFCApp()`](#setgpayasdefaultnfcapp)
 * [`registerDataChangedListener()`](#registerdatachangedlistener)
-* [`getWalletInformation(...)`](#getwalletinformation)
-* [`pushToWallet(...)`](#pushtowallet)
+* [`getGoogleWalletInformation(...)`](#getgooglewalletinformation)
+* [`continuePendingTokenize(...)`](#continuependingtokenize)
+* [`pushToGoogleWallet(...)`](#pushtogooglewallet)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 * [Enums](#enums)
@@ -334,10 +335,10 @@ returns the status of a token with a given token ID
 --------------------
 
 
-### getWalletInformation(...)
+### getGoogleWalletInformation(...)
 
 ```typescript
-getWalletInformation(option: GoogleWalletRequest) => Promise<any>
+getGoogleWalletInformation(option: GoogleWalletRequest) => Promise<any>
 ```
 
 | Param        | Type                                                                |
@@ -349,10 +350,25 @@ getWalletInformation(option: GoogleWalletRequest) => Promise<any>
 --------------------
 
 
-### pushToWallet(...)
+### continuePendingTokenize(...)
 
 ```typescript
-pushToWallet(option: { response: string; }) => Promise<any>
+continuePendingTokenize(option: GoogleTokenizationRequest) => Promise<any>
+```
+
+| Param        | Type                                                                            |
+| ------------ | ------------------------------------------------------------------------------- |
+| **`option`** | <code><a href="#googletokenizationrequest">GoogleTokenizationRequest</a></code> |
+
+**Returns:** <code>Promise&lt;any&gt;</code>
+
+--------------------
+
+
+### pushToGoogleWallet(...)
+
+```typescript
+pushToGoogleWallet(option: { response: string; }) => Promise<any>
 ```
 
 | Param        | Type                               |
@@ -423,6 +439,15 @@ pushToWallet(option: { response: string; }) => Promise<any>
 | **`cardHolderName`**  | <code>string</code> | Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider). | 1.0.0 |
 | **`cardNickName`**    | <code>string</code> | Sets the Card Nickname that should be used for the tokenization attempt (see TokenServiceProvider).   | 1.0.0 |
 | **`last4CardNumber`** | <code>string</code> | Sets the Card Last4 that should be used for the tokenization attempt (see TokenServiceProvider).      | 1.0.0 |
+
+
+#### GoogleTokenizationRequest
+
+| Prop                   | Type                | Description                                                                                             | Since |
+| ---------------------- | ------------------- | ------------------------------------------------------------------------------------------------------- | ----- |
+| **`tokenReferenceId`** | <code>string</code> | Sets the Token ReferenceId that should be used for the tokenization attempt (see TokenServiceProvider). | 1.0.0 |
+| **`paymentNetwork`**   | <code>string</code> | Sets the Payment Network that should be used for the tokenization attempt (see TokenServiceProvider).   | 1.0.0 |
+| **`cardHolderName`**   | <code>string</code> | Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider).   | 1.0.0 |
 
 
 ### Type Aliases

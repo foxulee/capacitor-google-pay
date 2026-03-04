@@ -43,10 +43,13 @@ class GooglePayWeb extends core.WebPlugin {
     setGPayAsDefaultNFCApp() {
         throw this.unimplemented('Not implemented on web.');
     }
-    getWalletInformation() {
+    getGoogleWalletInformation() {
         throw this.unimplemented('Not implemented on web.');
     }
-    pushToWallet() {
+    continuePendingTokenize() {
+        throw this.unimplemented('Not implemented on web.');
+    }
+    pushToGoogleWallet() {
         throw this.unimplemented('Not implemented on web.');
     }
     registerDataChangedListener() {

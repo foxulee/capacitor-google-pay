@@ -53,11 +53,15 @@ export class GooglePayWeb extends WebPlugin implements GooglePayPlugin {
     throw this.unimplemented('Not implemented on web.');
   }
 
-  getWalletInformation(): Promise<any> {
+  getGoogleWalletInformation(): Promise<any> {
     throw this.unimplemented('Not implemented on web.');
   }
 
-  pushToWallet(): Promise<any> {
+  continuePendingTokenize(): Promise<any> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  pushToGoogleWallet(): Promise<any> {
     throw this.unimplemented('Not implemented on web.');
   }
 

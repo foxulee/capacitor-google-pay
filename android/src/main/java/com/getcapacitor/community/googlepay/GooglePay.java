@@ -57,8 +57,8 @@ public class GooglePay {
 
 //     add GoogleUtilityListener
     public interface GoogleUtilityListener {
-        void onSuccessForGoogle(int requestCode, @NonNull Bundle data);
-        void onFailureForGoogle(int errorCode, @NonNull String message);
+        void onSuccessForWallets(int requestCode, @NonNull Bundle data, WalletType walletType);
+        void onFailureForWallets(int errorCode, @NonNull Bundle data, WalletType walletType);
     }
 
     @Nullable
@@ -83,18 +83,24 @@ public class GooglePay {
     protected static final int RESULT_OK = -1;
     protected static final int RESULT_INVALID_TOKEN = 15003;
 
+    //-------------------------------------Google--------------------------------------------------------
+    public static final int GOOGLE_REQUEST_CODE_CREATE_WALLET = 100;
+    public static final int GOOGLE_REQUEST_CODE_PUSH_TOKENIZE = 200;
+    public static final int GOOGLE_REQUEST_CODE_WALLET_INFORMATION = 300;
 
-    public static final int REQUEST_CREATE_WALLET = 100;
-    public static final int REQUEST_CODE_PUSH_TOKENIZE = 200;
-    public static final int REQUEST_WALLET_INFORMATION = 300;
-    public static final int EXCEPTION_TOKEN_PENDING_STATE = 400;
 
-    public static final int ERROR_CODE_JSON_FORMATTING_EXCEPTION = 01;
-    public static final int ERROR_CODE_WALLET_NOT_INTIALIZED = 02;
-    public static final int ERROR_CODE_CARD_EXISTS_IN_WALLET = 03;
+    public static final int GOOGLE_ERROR_CODE_JSON_FORMATTING_EXCEPTION = 01;
+    public static final int GOOGLE_ERROR_CODE_WALLET_NOT_INTIALIZED = 02;
+    public static final int GOOGLE_ERROR_CODE_CARD_EXISTS_IN_WALLET = 03;
+  //-----------------------------------------------------------------------------------------------------
 
+    //Common
     public static final String PASSTHRUFROMAPP_WALLET_INFORMATION = "passthrufromapp_wallet_information";
-    public static final String PENDING_VERIFICATION_TOKEN = "pending_verification_token";
+    public static final String ERROR_MESSAGE = "error_message";
+    //
+    // Pending Token, Google Specific
+    public static final int GOOGLE_EXCEPTION_TOKEN_PENDING_STATE = 400;
+    public static final String GOOGLE_PENDING_VERIFICATION_TOKEN = "pending_verification_token";
 
     private static final String ERROR_MESSAGE_CARD_EXISTS = "Card already exist in wallet";
     private static final String ERROR_MESSAGE_WALLET_NOT_INTIALIZED = "Wallet not intialized";
@@ -109,6 +115,12 @@ public class GooglePay {
     private static final String AMEX = "AMEX";
     private static final String DISCOVER = "DISCOVER";
     private static final String MASTERCARD = "MASTERCARD";
+
+  enum WalletType {
+    SAMSUNGWALLET,
+    GOOGLEWALLET,
+    MERCHANTWALLET,
+  }
 
     public enum ErrorCodeReference {
         PUSH_PROVISION_ERROR(-1),
@@ -198,7 +210,7 @@ public class GooglePay {
                 result.put("isCreated", true);
                 call.resolve(result);
             }
-        } else if (requestCode == REQUEST_CODE_PUSH_TOKENIZE) {
+        } else if (requestCode == GOOGLE_REQUEST_CODE_PUSH_TOKENIZE) {
             if (resultCode == RESULT_CANCELED) {
                 call.reject("PUSH_PROVISION_CANCEL", ErrorCodeReference.PUSH_PROVISION_CANCEL.getError());
             } else if (resultCode == RESULT_OK) {
@@ -514,7 +526,7 @@ public class GooglePay {
             Log.i(TAG, "PUSHPROVISION --- 3");
 
             // a request code value you define as in Android's startActivityForResult
-            tapAndPay.pushTokenize(bridge.getActivity(), pushTokenizeRequest, REQUEST_CODE_PUSH_TOKENIZE);
+            tapAndPay.pushTokenize(bridge.getActivity(), pushTokenizeRequest, GOOGLE_REQUEST_CODE_PUSH_TOKENIZE);
         } catch (Exception e) {
             call.reject(e.getMessage(), ErrorCodeReference.PUSH_PROVISION_ERROR.getError());
         }
@@ -647,12 +659,17 @@ public class GooglePay {
         }
     }
 
-    public void getWalletInformation(PluginCall call) {
-        String paymentNetwork = call.getString("paymentNetwork");
-        String cardHolderName = call.getString("cardHolderName");
+    public void getGoogleWalletInformation(PluginCall call) {
+        String cardholderFirstName = call.getString("cardholderFirstName");
+        String cardholderLastName = call.getString("cardholderLastName");
+        String localeLanguage = call.getString("localeLanguage");
+        String localeCountry = call.getString("localeCountry");
         String cardNickName = call.getString("cardNickName");
         String last4CardNumber = call.getString("last4CardNumber");
         try{
+          if(TextUtils.isEmpty(last4CardNumber)){
+            getGoogleInformation(cardholderFirstName, cardholderLastName, localeLanguage, localeCountry, cardNickName);;
+          }
             this.tapAndPay
                 .listTokens()
                 .addOnCompleteListener(
@@ -663,20 +680,19 @@ public class GooglePay {
                                 for (TokenInfo token : task.getResult()) {
                                     if (TextUtils.equals(token.getFpanLastFour(), last4CardNumber)) {
                                         if (token.getTokenState() == TapAndPay.TOKEN_STATE_ACTIVE || token.getTokenState() == TapAndPay.TOKEN_STATE_PENDING || token.getTokenState() == TapAndPay.TOKEN_STATE_SUSPENDED) {
-                                            sendErrorStatus(ERROR_CODE_CARD_EXISTS_IN_WALLET, ERROR_MESSAGE_CARD_EXISTS);
+                                            sendErrorStatus(GOOGLE_ERROR_CODE_CARD_EXISTS_IN_WALLET, ERROR_MESSAGE_CARD_EXISTS, WalletType.GOOGLEWALLET);
+                                            return;
                                         } else if (token.getTokenState() == TapAndPay.TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION) {
                                             Bundle responseBundle = new Bundle();
-                                            responseBundle.putString(PENDING_VERIFICATION_TOKEN, token.getIssuerTokenId());
-                                            if (googleUtilityListener != null)
-                                                googleUtilityListener.onSuccessForGoogle(EXCEPTION_TOKEN_PENDING_STATE, responseBundle);
-
+                                            responseBundle.putString(GOOGLE_PENDING_VERIFICATION_TOKEN, token.getIssuerTokenId());
+                                            sendSuccesStatus(GOOGLE_EXCEPTION_TOKEN_PENDING_STATE, responseBundle, WalletType.GOOGLEWALLET);
                                         }
                                         return;
                                     }
                                 }
-                                getInformation(paymentNetwork, cardHolderName, cardNickName);
+                              getGoogleInformation(cardholderFirstName, cardholderLastName, localeLanguage, localeCountry, cardNickName);
                             } else {
-                                getInformation(paymentNetwork, cardHolderName, cardNickName);
+                              getGoogleInformation(cardholderFirstName, cardholderLastName, localeLanguage, localeCountry, cardNickName);
                             }
                         }
                     }
@@ -688,54 +704,88 @@ public class GooglePay {
 
     }
 
-    public void pushToWallet(PluginCall call) throws Exception {
-        String response = call.getString("response");
-        WalletResponse walletResponse = new Gson().fromJson(decodeBase64Encoding(response), WalletResponse.class);
-        final OPCResponse opcResponse = new Gson().fromJson(decodeBase64Encoding(walletResponse.getForWalletSdk()), OPCResponse.class);
-        int tokenProvider = 0, cardNetwork = 0;
-        switch (opcResponse.getCardNetwork()) {
-            case VISA:
-                tokenProvider = TapAndPay.TOKEN_PROVIDER_VISA;
-                cardNetwork = TapAndPay.CARD_NETWORK_VISA;
-                break;
-            case AMEX:
-                tokenProvider = TapAndPay.TOKEN_PROVIDER_AMEX;
-                cardNetwork = TapAndPay.CARD_NETWORK_AMEX;
-                break;
-            case DISCOVER:
-                tokenProvider = TapAndPay.TOKEN_PROVIDER_DISCOVER;
-                cardNetwork = TapAndPay.CARD_NETWORK_DISCOVER;
-                break;
-            case MASTERCARD:
-                tokenProvider = TapAndPay.TOKEN_PROVIDER_MASTERCARD;
-                cardNetwork = TapAndPay.CARD_NETWORK_MASTERCARD;
-                break;
-        }
-        UserAddress userAddress = UserAddress.newBuilder()
-                .setAddress1(opcResponse.getUserAddress().getLine1())
-                .setAddress2(opcResponse.getUserAddress().getLine2())
-                .setCountryCode(opcResponse.getUserAddress().getCountry())
-                .setLocality(opcResponse.getUserAddress().getCity())
-                .setAdministrativeArea(opcResponse.getUserAddress().getState())
-                .setName(opcResponse.getCardholderName())
-                .setPhoneNumber(opcResponse.getPhoneNumber())
-                .setPostalCode(opcResponse.getUserAddress().getPostalCode())
-                .build();
-        PushTokenizeRequest pushTokenizeRequest = new PushTokenizeRequest.Builder()
-                .setOpaquePaymentCard(opcResponse.getOpc().getBytes())
-                .setNetwork(cardNetwork)
-                .setUserAddress(userAddress)
-                .setTokenServiceProvider(tokenProvider)
-                .setDisplayName(opcResponse.getDisplayName())
-                .setLastDigits(opcResponse.getLastDigits())
-                .build();
-        this.tapAndPay.pushTokenize(
-                bridge.getActivity(),
-                pushTokenizeRequest,
-                REQUEST_CODE_PUSH_TOKENIZE);
+  public void continuePendingTokenize(PluginCall call) throws Exception {
+    String tokenRefrenceId = call.getString("tokenReferenceId");
+    String paymentNetwork = call.getString("paymentNetwork");
+    String cardHolderName = call.getString("cardHolderName");
+    String network = getPaymentNetwork(paymentNetwork);
+    int tokenProvider = 0, cardNetwork = 0;
+    switch (network) {
+      case VISA:
+        tokenProvider = TapAndPay.TOKEN_PROVIDER_VISA;
+        cardNetwork = TapAndPay.CARD_NETWORK_VISA;
+        break;
+      case AMEX:
+        tokenProvider = TapAndPay.TOKEN_PROVIDER_AMEX;
+        cardNetwork = TapAndPay.CARD_NETWORK_AMEX;
+        break;
+      case DISCOVER:
+        tokenProvider = TapAndPay.TOKEN_PROVIDER_DISCOVER;
+        cardNetwork = TapAndPay.CARD_NETWORK_DISCOVER;
+        break;
+      case MASTERCARD:
+        tokenProvider = TapAndPay.TOKEN_PROVIDER_MASTERCARD;
+        cardNetwork = TapAndPay.CARD_NETWORK_MASTERCARD;
+        break;
+    }
+    this.tapAndPay.tokenize(
+      bridge.getActivity(),
+      tokenRefrenceId,
+      tokenProvider,
+      cardHolderName,
+      cardNetwork,
+      GOOGLE_REQUEST_CODE_PUSH_TOKENIZE);
+  }
+
+    public void pushToGoogleWallet(PluginCall call) throws Exception {
+      String response = call.getString("response");
+      NonMerchantWalletResponse googleResponse = new Gson().fromJson(response,NonMerchantWalletResponse.class);
+      String opc =  googleResponse.getPassthruToIdiSdk();
+      final OPCResponse opcResponse = new Gson().fromJson(decodeBase64Encoding(opc), OPCResponse.class);
+      int tokenProvider = 0, cardNetwork = 0;
+      switch (opcResponse.getCardNetwork()) {
+        case VISA:
+          tokenProvider = TapAndPay.TOKEN_PROVIDER_VISA;
+          cardNetwork = TapAndPay.CARD_NETWORK_VISA;
+          break;
+        case AMEX:
+          tokenProvider = TapAndPay.TOKEN_PROVIDER_AMEX;
+          cardNetwork = TapAndPay.CARD_NETWORK_AMEX;
+          break;
+        case DISCOVER:
+          tokenProvider = TapAndPay.TOKEN_PROVIDER_DISCOVER;
+          cardNetwork = TapAndPay.CARD_NETWORK_DISCOVER;
+          break;
+        case MASTERCARD:
+          tokenProvider = TapAndPay.TOKEN_PROVIDER_MASTERCARD;
+          cardNetwork = TapAndPay.CARD_NETWORK_MASTERCARD;
+          break;
+      }
+      UserAddress userAddress = UserAddress.newBuilder()
+        .setAddress1(opcResponse.getUserAddress().getLine1())
+        .setAddress2(opcResponse.getUserAddress().getLine2())
+        .setCountryCode(opcResponse.getUserAddress().getCountry())
+        .setLocality(opcResponse.getUserAddress().getCity())
+        .setAdministrativeArea(opcResponse.getUserAddress().getState())
+        .setName(opcResponse.getCardholderName())
+        .setPhoneNumber(opcResponse.getPhoneNumber())
+        .setPostalCode(opcResponse.getUserAddress().getPostalCode())
+        .build();
+      PushTokenizeRequest pushTokenizeRequest = new PushTokenizeRequest.Builder()
+        .setOpaquePaymentCard(opcResponse.getOpc().getBytes())
+        .setNetwork(cardNetwork)
+        .setUserAddress(userAddress)
+        .setTokenServiceProvider(tokenProvider)
+        .setDisplayName(opcResponse.getDisplayName())
+        .setLastDigits(opcResponse.getLastDigits())
+        .build();
+      this.tapAndPay.pushTokenize(
+        bridge.getActivity(),
+        pushTokenizeRequest,
+        GOOGLE_REQUEST_CODE_PUSH_TOKENIZE);
     }
 
-    private void getInformation(final String paymentNetwork, final String cardHolderName, final String cardNickName) {
+    private void getGoogleInformation(final String cardholderFirstName, final String cardholderLastName, final String localeLanguage, final String localeCountry, final String cardNickName) {
         this.tapAndPay
             .getActiveWalletId()
             .addOnCompleteListener(
@@ -752,48 +802,66 @@ public class GooglePay {
                                                     public void onComplete(@NonNull Task<String> task) {
                                                         if (task.isSuccessful()) {
                                                             try {
-                                                                String base64JsonString = generatePassThruFromApp(walletId, task.getResult(), paymentNetwork, cardHolderName, cardNickName);
+                                                                String base64JsonString = generatePassThruFromApp(walletId, task.getResult(), cardholderFirstName, cardholderLastName, localeLanguage, localeCountry, cardNickName, WalletType.GOOGLEWALLET);
                                                                 Bundle responseBundle = new Bundle();
                                                                 responseBundle.putString(PASSTHRUFROMAPP_WALLET_INFORMATION, base64JsonString);
-                                                                if (googleUtilityListener != null)
-                                                                    googleUtilityListener.onSuccessForGoogle(REQUEST_WALLET_INFORMATION, responseBundle);
+                                                                sendSuccesStatus(GOOGLE_REQUEST_CODE_WALLET_INFORMATION, responseBundle, WalletType.GOOGLEWALLET);
                                                             } catch (Exception e) {
-                                                                sendErrorStatus(ERROR_CODE_JSON_FORMATTING_EXCEPTION, ERROR_MESSAGE_JSON_FORMATTING_EXCEPTION);
+                                                                sendErrorStatus(GOOGLE_ERROR_CODE_JSON_FORMATTING_EXCEPTION, ERROR_MESSAGE_JSON_FORMATTING_EXCEPTION, WalletType.GOOGLEWALLET);
                                                             }
                                                         } else {
-                                                            //TODO:Send a proper error Message
+                                                          sendErrorStatus(GOOGLE_ERROR_CODE_WALLET_NOT_INTIALIZED, ERROR_MESSAGE_WALLET_NOT_INTIALIZED, WalletType.GOOGLEWALLET);
                                                         }
                                                     }
                                                 });
                             } else {
-                                sendErrorStatus(ERROR_CODE_WALLET_NOT_INTIALIZED, ERROR_MESSAGE_WALLET_NOT_INTIALIZED);
+                                sendErrorStatus(GOOGLE_ERROR_CODE_WALLET_NOT_INTIALIZED, ERROR_MESSAGE_WALLET_NOT_INTIALIZED, WalletType.GOOGLEWALLET);
                             }
                         }
                     });
     }
 
-     private void sendErrorStatus(int errorCode, @NonNull String message) {
-        if (googleUtilityListener != null) {
-            googleUtilityListener.onFailureForGoogle(errorCode, message);
-        }
+
+    private void sendSuccesStatus(int requestCode, Bundle responseBundle, WalletType walletType) {
+      if (googleUtilityListener != null) {
+        googleUtilityListener.onSuccessForWallets(requestCode, responseBundle, walletType);
+      }
     }
+   private void sendErrorStatus(int errorCode, @NonNull String message, WalletType walletType) {
+     Bundle errorBundle = new Bundle();
+     errorBundle.putString(ERROR_MESSAGE, message);
+      if (googleUtilityListener != null) {
+        googleUtilityListener.onFailureForWallets(errorCode, errorBundle, walletType);
+      }
+  }
 
-    private String generatePassThruFromApp(String walledId, String hardwareId, String paymentNetwork, String cardHolderName, String cardNickName) throws Exception {
-        Gson gson = new Gson();
-
-        GoogleWallet googleWallet = new GoogleWallet(walledId, hardwareId);
-        String googleWalletJsonString = gson.toJson(googleWallet);
-        String base64GoogleWalletJsonString = generateBase64Encoding(googleWalletJsonString);
-
-        passThruCardDataFromApp passThruCardDataFromApp = new passThruCardDataFromApp(cardNickName, paymentNetwork, cardHolderName);
-        String passThruCardDataFromAppJsonString = gson.toJson(passThruCardDataFromApp);
-        String base64PassthruCardDataFromAppJsonString = generateBase64Encoding(passThruCardDataFromAppJsonString);
-
-        PassThruFromApp passThruFromApp = new PassThruFromApp(GOOGLE_PAY, base64GoogleWalletJsonString, base64PassthruCardDataFromAppJsonString);
-        String passThruFromAppJsonString = gson.toJson(passThruFromApp);
-
-        return generateBase64Encoding(passThruFromAppJsonString);
+  private void sendErrorStatus(int errorCode, Bundle errorBundle, WalletType walletType) {
+    if (googleUtilityListener != null) {
+      googleUtilityListener.onFailureForWallets(errorCode, errorBundle, walletType);
     }
+  }
+
+  private String generatePassThruFromApp(String walledId, String hardwareId, String cardholderFirstName, String cardholderLastName, String localeLanguage, String localeCountry, String cardNickName, WalletType walletType) throws Exception {
+
+    Gson gson = new Gson();
+
+    NonMerchantWallet nonMerchantWallet = new NonMerchantWallet(walledId, hardwareId, walletType);
+
+    NonMerchantWalletData nonMerchantWalletData = new NonMerchantWalletData(nonMerchantWallet, walletType);
+
+    String nonMerchantWalletJsonString = gson.toJson(nonMerchantWalletData);
+    String base64nonMerchantJsonString = generateBase64Encoding(nonMerchantWalletJsonString). replace("=","");
+
+    UserData userData = new UserData(cardholderFirstName, cardholderLastName, localeLanguage, localeCountry, cardNickName);
+
+
+    PassThruFromSDK passThruFromSDK = (walletType == WalletType.MERCHANTWALLET) ? new PassThruFromSDK(userData) : new PassThruFromSDK(base64nonMerchantJsonString, userData);
+
+    String passthruFromIdiSdk = gson.toJson(passThruFromSDK);
+    return generateBase64Encoding(passthruFromIdiSdk);
+
+
+  }
 
     private String generateBase64Encoding(String jsonString) throws Exception {
         if (jsonString != null) {
@@ -996,177 +1064,177 @@ public class GooglePay {
 
         }
 
-        private class OPCResponse {
+//        private class OPCResponse {
+//
+//            @SerializedName("cardNetwork")
+//            @Expose
+//            private String cardNetwork;
+//
+//            @SerializedName("tokenProvider")
+//            @Expose
+//            private String tokenProvider;
+//
+//            @SerializedName("displayName")
+//            @Expose
+//            private String displayName;
+//
+//            @SerializedName("lastDigits")
+//            @Expose
+//            private String lastDigits;
+//
+//            @SerializedName("opc")
+//            @Expose
+//            private String opc;
+//
+//            @SerializedName("userAddress")
+//            @Expose
+//            private BillingAddress userAddress;
+//
+//            @SerializedName("cardholderName")
+//            @Expose
+//            private String cardholderName;
+//
+//            @SerializedName("phoneNumber")
+//            @Expose
+//            private String phoneNumber;
+//
+//
+//            private BillingAddress getUserAddress() {
+//                return userAddress;
+//            }
+//
+//            private void setUserAddress(BillingAddress userAddress) {
+//                this.userAddress = userAddress;
+//            }
+//
+//            private String getCardNetwork() {
+//                return cardNetwork;
+//            }
+//
+//            private void setCardNetwork(String cardNetwork) {
+//                this.cardNetwork = cardNetwork;
+//            }
+//
+//            private String getTokenProvider() {
+//                return tokenProvider;
+//            }
+//
+//            private void setTokenProvider(String tokenProvider) {
+//                this.tokenProvider = tokenProvider;
+//            }
+//
+//            private String getDisplayName() {
+//                return displayName;
+//            }
+//
+//            private void setDisplayName(String displayName) {
+//                this.displayName = displayName;
+//            }
+//
+//            private String getLastDigits() {
+//                return lastDigits;
+//            }
+//
+//            private void setLastDigits(String lastDigits) {
+//                this.lastDigits = lastDigits;
+//            }
+//
+//            private String getOpc() {
+//                return opc;
+//            }
+//
+//            private void setOpc(String opc) {
+//                this.opc = opc;
+//            }
+//
+//            private String getCardholderName() {
+//                return cardholderName;
+//            }
+//
+//            private void setCardholderName(String cardholderName) {
+//                this.cardholderName = cardholderName;
+//            }
+//
+//            private String getPhoneNumber() {
+//                return phoneNumber;
+//            }
+//
+//            private void setPhoneNumber(String phoneNumber) {
+//                this.phoneNumber = phoneNumber;
+//            }
+//
+//        }
 
-            @SerializedName("cardNetwork")
-            @Expose
-            private String cardNetwork;
-
-            @SerializedName("tokenProvider")
-            @Expose
-            private String tokenProvider;
-
-            @SerializedName("displayName")
-            @Expose
-            private String displayName;
-
-            @SerializedName("lastDigits")
-            @Expose
-            private String lastDigits;
-
-            @SerializedName("opc")
-            @Expose
-            private String opc;
-
-            @SerializedName("userAddress")
-            @Expose
-            private BillingAddress userAddress;
-
-            @SerializedName("cardholderName")
-            @Expose
-            private String cardholderName;
-
-            @SerializedName("phoneNumber")
-            @Expose
-            private String phoneNumber;
-
-
-            private BillingAddress getUserAddress() {
-                return userAddress;
-            }
-
-            private void setUserAddress(BillingAddress userAddress) {
-                this.userAddress = userAddress;
-            }
-
-            private String getCardNetwork() {
-                return cardNetwork;
-            }
-
-            private void setCardNetwork(String cardNetwork) {
-                this.cardNetwork = cardNetwork;
-            }
-
-            private String getTokenProvider() {
-                return tokenProvider;
-            }
-
-            private void setTokenProvider(String tokenProvider) {
-                this.tokenProvider = tokenProvider;
-            }
-
-            private String getDisplayName() {
-                return displayName;
-            }
-
-            private void setDisplayName(String displayName) {
-                this.displayName = displayName;
-            }
-
-            private String getLastDigits() {
-                return lastDigits;
-            }
-
-            private void setLastDigits(String lastDigits) {
-                this.lastDigits = lastDigits;
-            }
-
-            private String getOpc() {
-                return opc;
-            }
-
-            private void setOpc(String opc) {
-                this.opc = opc;
-            }
-
-            private String getCardholderName() {
-                return cardholderName;
-            }
-
-            private void setCardholderName(String cardholderName) {
-                this.cardholderName = cardholderName;
-            }
-
-            private String getPhoneNumber() {
-                return phoneNumber;
-            }
-
-            private void setPhoneNumber(String phoneNumber) {
-                this.phoneNumber = phoneNumber;
-            }
-
-        }
-
-        private class BillingAddress {
-
-            @SerializedName("line1")
-            @Expose
-            private String line1;
-            @SerializedName("line2")
-            @Expose
-            private String line2;
-            @SerializedName("city")
-            @Expose
-            private String city;
-            @SerializedName("state")
-            @Expose
-            private String state;
-            @SerializedName("country")
-            @Expose
-            private String country;
-            @SerializedName("postalCode")
-            @Expose
-            private String postalCode;
-
-            private String getLine1() {
-                return line1;
-            }
-
-            private void setLine1(String line1) {
-                this.line1 = line1;
-            }
-
-            private String getLine2() {
-                return line2;
-            }
-
-            private void setLine2(String line2) {
-                this.line2 = line2;
-            }
-
-            private String getCity() {
-                return city;
-            }
-
-            private void setCity(String city) {
-                this.city = city;
-            }
-
-            private String getState() {
-                return state;
-            }
-
-            private void setState(String state) {
-                this.state = state;
-            }
-
-            private String getCountry() {
-                return country;
-            }
-
-            private void setCountry(String country) {
-                this.country = country;
-            }
-
-            private String getPostalCode() {
-                return postalCode;
-            }
-
-            private void setPostalCode(String postalCode) {
-                this.postalCode = postalCode;
-            }
-
-    }
+//        private class BillingAddress {
+//
+//            @SerializedName("line1")
+//            @Expose
+//            private String line1;
+//            @SerializedName("line2")
+//            @Expose
+//            private String line2;
+//            @SerializedName("city")
+//            @Expose
+//            private String city;
+//            @SerializedName("state")
+//            @Expose
+//            private String state;
+//            @SerializedName("country")
+//            @Expose
+//            private String country;
+//            @SerializedName("postalCode")
+//            @Expose
+//            private String postalCode;
+//
+//            private String getLine1() {
+//                return line1;
+//            }
+//
+//            private void setLine1(String line1) {
+//                this.line1 = line1;
+//            }
+//
+//            private String getLine2() {
+//                return line2;
+//            }
+//
+//            private void setLine2(String line2) {
+//                this.line2 = line2;
+//            }
+//
+//            private String getCity() {
+//                return city;
+//            }
+//
+//            private void setCity(String city) {
+//                this.city = city;
+//            }
+//
+//            private String getState() {
+//                return state;
+//            }
+//
+//            private void setState(String state) {
+//                this.state = state;
+//            }
+//
+//            private String getCountry() {
+//                return country;
+//            }
+//
+//            private void setCountry(String country) {
+//                this.country = country;
+//            }
+//
+//            private String getPostalCode() {
+//                return postalCode;
+//            }
+//
+//            private void setPostalCode(String postalCode) {
+//                this.postalCode = postalCode;
+//            }
+//
+//    }
 
     private int getCardNetwork(String tsp) {
         return switch (tsp) {
@@ -1185,5 +1253,527 @@ public class GooglePay {
             default -> 0;
         };
     }
+
+  private class NonMerchantWallet {
+    private String walletId;
+    private String samsungWalletId;
+    private String stableHardwareId;
+    private String deviceId;
+
+    private NonMerchantWallet(String walletId, String stableHardwareId, WalletType walletType) {
+      this.walletId = walletId;
+      if (walletType == WalletType.GOOGLEWALLET) {
+        this.stableHardwareId = stableHardwareId;
+        this.walletId = walletId;
+      } else {
+        this.deviceId = stableHardwareId;
+        this.samsungWalletId = walletId;
+      }
+
+    }
+
+
+    public String getWalletId() {
+      return walletId;
+    }
+
+    public void setWalletId(String walletId) {
+      this.walletId = walletId;
+    }
+
+    public String getStableHardwareId() {
+      return stableHardwareId;
+    }
+
+    public void setStableHardwareId(String stableHardwareId) {
+      this.stableHardwareId = stableHardwareId;
+    }
+
+    public String getDeviceId() {
+      return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+      this.deviceId = deviceId;
+    }
+
+    public String getSamsungWalletId() {
+      return samsungWalletId;
+    }
+
+    public void setSamsungWalletId(String samsungWalletId) {
+      this.samsungWalletId = samsungWalletId;
+    }
+  }
+
+
+  private class PassThruFromSDK {
+    private String walletData;
+    private UserData userData;
+
+    private PassThruFromSDK(String walletData, UserData userData) {
+      this.walletData = walletData;
+      this.userData = userData;
+    }
+
+    private PassThruFromSDK(UserData userData) {
+      this.userData = userData;
+    }
+
+
+    public String getWalletData() {
+      return walletData;
+    }
+
+    public void setWalletData(String walletData) {
+      this.walletData = walletData;
+    }
+
+    public UserData getUserData() {
+      return userData;
+    }
+
+    public void setUserData(UserData userData) {
+      this.userData = userData;
+    }
+  }
+
+
+  private class UserData {
+    private String cardholderFirstName;
+    private String cardholderLastName;
+    private String localeLanguage;
+    private String localeCountry;
+    private String cardNickName;
+
+    private UserData(String cardholderFirstName, String cardholderLastName, String localeLanguage, String localeCountry, String cardNickName) {
+      this.cardholderFirstName = cardholderFirstName;
+      this.cardholderLastName = cardholderLastName;
+      this.localeLanguage = localeLanguage;
+      this.localeCountry = localeCountry;
+      this.cardNickName = cardNickName;
+    }
+
+
+    public String getCardholderFirstName() {
+      return cardholderFirstName;
+    }
+
+    public void setCardholderFirstName(String cardholderFirstName) {
+      this.cardholderFirstName = cardholderFirstName;
+    }
+
+    public String getCardholderLastName() {
+      return cardholderLastName;
+    }
+
+    public void setCardholderLastName(String cardholderLastName) {
+      this.cardholderLastName = cardholderLastName;
+    }
+
+    public String getLocaleLanguage() {
+      return localeLanguage;
+    }
+
+    public void setLocaleLanguage(String localeLanguage) {
+      this.localeLanguage = localeLanguage;
+    }
+
+    public String getLocaleCountry() {
+      return localeCountry;
+    }
+
+    public void setLocaleCountry(String localeCountry) {
+      this.localeCountry = localeCountry;
+    }
+
+    public String getCardNickName() {
+      return cardNickName;
+    }
+
+    public void setCardNickName(String cardNickName) {
+      this.cardNickName = cardNickName;
+    }
+  }
+
+  private class NonMerchantWalletData {
+    private NonMerchantWallet googleAppWalletData;
+    private NonMerchantWallet samsungAppWalletData;
+
+    private NonMerchantWalletData(NonMerchantWallet nonMerchantWallet, WalletType walletType) {
+
+      if (walletType == WalletType.GOOGLEWALLET)
+        this.googleAppWalletData = nonMerchantWallet;
+      else
+        this.samsungAppWalletData = nonMerchantWallet;
+    }
+
+
+    public NonMerchantWallet getGoogleAppWalletData() {
+      return googleAppWalletData;
+    }
+
+    public void setGoogleAppWalletData(NonMerchantWallet googleAppWalletData) {
+      this.googleAppWalletData = googleAppWalletData;
+    }
+
+    public NonMerchantWallet getSamsungAppWalletData() {
+      return samsungAppWalletData;
+    }
+
+    public void setSamsungAppWalletData(NonMerchantWallet samsungAppWalletData) {
+      this.samsungAppWalletData = samsungAppWalletData;
+    }
+  }
+
+
+  private class CardDetailResponse {
+
+    @SerializedName("cardDetail")
+    @Expose
+    private String cardDetail;
+
+    @SerializedName("tokenizationProvider")
+    @Expose
+    private String tokenizationProvider;
+
+    @SerializedName("cardType")
+    @Expose
+    private String cardType;
+
+
+    private String getCardDetail() {
+      return cardDetail;
+    }
+
+    private void setCardDetail(String cardDetail) {
+      this.cardDetail = cardDetail;
+    }
+
+    private String getTokenizationProvider() {
+      return tokenizationProvider;
+    }
+
+    private void setTokenizationProvider(String tokenizationProvider) {
+      this.tokenizationProvider = tokenizationProvider;
+    }
+
+    private String getCardType() {
+      return cardType;
+    }
+
+    private void setCardType(String cardType) {
+      this.cardType = cardType;
+    }
+
+
+  }
+
+  private class NonMerchantWalletResponse {
+
+    @SerializedName("correlationId")
+    @Expose
+    private String correlationId;
+
+    @SerializedName("passthruToIdiSdk")
+    @Expose
+    private String passthruToIdiSdk;
+
+    @SerializedName("statusCode")
+    @Expose
+    private String statusCode;
+
+    @SerializedName("statusDescription")
+    @Expose
+    private String statusDescription;
+
+
+    public String getCorrelationId() {
+      return correlationId;
+    }
+
+    public void setCorrelationId(String correlationId) {
+      this.correlationId = correlationId;
+    }
+
+    public String getPassthruToIdiSdk() {
+      return passthruToIdiSdk;
+    }
+
+    public void setPassthruToIdiSdk(String passthruToIdiSdk) {
+      this.passthruToIdiSdk = passthruToIdiSdk;
+    }
+
+    public String getStatusCode() {
+      return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+      this.statusCode = statusCode;
+    }
+
+    public String getStatusDescription() {
+      return statusDescription;
+    }
+
+    public void setStatusDescription(String statusDescription) {
+      this.statusDescription = statusDescription;
+    }
+  }
+
+
+  private class OPCResponse {
+
+    @SerializedName("cardNetwork")
+    @Expose
+    private String cardNetwork;
+
+    @SerializedName("tokenProvider")
+    @Expose
+    private String tokenProvider;
+
+    @SerializedName("displayName")
+    @Expose
+    private String displayName;
+
+    @SerializedName("lastDigits")
+    @Expose
+    private String lastDigits;
+
+    @SerializedName("opc")
+    @Expose
+    private String opc;
+
+    @SerializedName("userAddress")
+    @Expose
+    private BillingAddress userAddress;
+
+    @SerializedName("cardholderName")
+    @Expose
+    private String cardholderName;
+
+    @SerializedName("phoneNumber")
+    @Expose
+    private String phoneNumber;
+
+
+    private BillingAddress getUserAddress() {
+      return userAddress;
+    }
+
+    private void setUserAddress(BillingAddress userAddress) {
+      this.userAddress = userAddress;
+    }
+
+    private String getCardNetwork() {
+      return cardNetwork;
+    }
+
+    private void setCardNetwork(String cardNetwork) {
+      this.cardNetwork = cardNetwork;
+    }
+
+    private String getTokenProvider() {
+      return tokenProvider;
+    }
+
+    private void setTokenProvider(String tokenProvider) {
+      this.tokenProvider = tokenProvider;
+    }
+
+    private String getDisplayName() {
+      return displayName;
+    }
+
+    private void setDisplayName(String displayName) {
+      this.displayName = displayName;
+    }
+
+    private String getLastDigits() {
+      return lastDigits;
+    }
+
+    private void setLastDigits(String lastDigits) {
+      this.lastDigits = lastDigits;
+    }
+
+    private String getOpc() {
+      return opc;
+    }
+
+    private void setOpc(String opc) {
+      this.opc = opc;
+    }
+
+    private String getCardholderName() {
+      return cardholderName;
+    }
+
+    private void setCardholderName(String cardholderName) {
+      this.cardholderName = cardholderName;
+    }
+
+    private String getPhoneNumber() {
+      return phoneNumber;
+    }
+
+    private void setPhoneNumber(String phoneNumber) {
+      this.phoneNumber = phoneNumber;
+    }
+
+  }
+
+  private class BillingAddress {
+
+    @SerializedName("line1")
+    @Expose
+    private String line1;
+    @SerializedName("line2")
+    @Expose
+    private String line2;
+    @SerializedName("city")
+    @Expose
+    private String city;
+    @SerializedName("state")
+    @Expose
+    private String state;
+    @SerializedName("country")
+    @Expose
+    private String country;
+    @SerializedName("postalCode")
+    @Expose
+    private String postalCode;
+
+    private String getLine1() {
+      return line1;
+    }
+
+    private void setLine1(String line1) {
+      this.line1 = line1;
+    }
+
+    private String getLine2() {
+      return line2;
+    }
+
+    private void setLine2(String line2) {
+      this.line2 = line2;
+    }
+
+    private String getCity() {
+      return city;
+    }
+
+    private void setCity(String city) {
+      this.city = city;
+    }
+
+    private String getState() {
+      return state;
+    }
+
+    private void setState(String state) {
+      this.state = state;
+    }
+
+    private String getCountry() {
+      return country;
+    }
+
+    private void setCountry(String country) {
+      this.country = country;
+    }
+
+    private String getPostalCode() {
+      return postalCode;
+    }
+
+    private void setPostalCode(String postalCode) {
+      this.postalCode = postalCode;
+    }
+
+  }
+
+
+//  private class MerchantProvisionResponse {
+//
+//    @SerializedName("correlationId")
+//    @Expose
+//    private String correlationId;
+//
+//
+//    @SerializedName("statusCode")
+//    @Expose
+//    private String statusCode;
+//
+//    @SerializedName("statusDescription")
+//    @Expose
+//    private String statusDescription;
+//
+//    @SerializedName("availablePushMethods")
+//    @Expose
+//    private IDIUtil.AvailablePushMethods[] availablePushMethods;
+//
+//    public IDIUtil.AvailablePushMethods[] getAvailablePushMethods() {
+//      return availablePushMethods;
+//    }
+//
+//    public void setAvailablePushMethods(IDIUtil.AvailablePushMethods[] availablePushMethods) {
+//      this.availablePushMethods = availablePushMethods;
+//    }
+//
+//    public String getStatusDescription() {
+//      return statusDescription;
+//    }
+//
+//    public void setStatusDescription(String statusDescription) {
+//      this.statusDescription = statusDescription;
+//    }
+//
+//    public String getStatusCode() {
+//      return statusCode;
+//    }
+//
+//    public void setStatusCode(String statusCode) {
+//      this.statusCode = statusCode;
+//    }
+//
+//
+//    public String getCorrelationId() {
+//      return correlationId;
+//    }
+//
+//    public void setCorrelationId(String correlationId) {
+//      this.correlationId = correlationId;
+//    }
+//  }
+//
+//
+//  private class AvailablePushMethods {
+//
+//    @SerializedName("type")
+//    @Expose
+//    private String type;
+//
+//    @SerializedName("uri")
+//    @Expose
+//    private String uri;
+//
+//    public String getType() {
+//      return type;
+//    }
+//
+//    public void setType(String type) {
+//      this.type = type;
+//    }
+//
+//    public String getUri() {
+//      return uri;
+//    }
+//
+//    public void setUri(String uri) {
+//      this.uri = uri;
+//    }
+//  }
 
 }

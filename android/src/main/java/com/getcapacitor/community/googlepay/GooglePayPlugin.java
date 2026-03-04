@@ -30,7 +30,7 @@ public class GooglePayPlugin extends Plugin {
 //         add onSuccessForGoogle and onFailureForGoogle listeners
         implementation.setGoogleUtilityListener(new GooglePay.GoogleUtilityListener() {
                     @Override
-                    public void onSuccessForGoogle(int requestCode, Bundle data) {
+                    public void onSuccessForWallets(int requestCode, Bundle data, GooglePay.WalletType walletType) {
                         JSObject payload = new JSObject();
                         payload.put("requestCode", requestCode);
 
@@ -41,15 +41,23 @@ public class GooglePayPlugin extends Plugin {
                             if (v != null) bundleObj.put(key, v.toString());
                         }
                         payload.put("data", bundleObj);
+                        payload.put("walletType", walletType.toString());
 
                         notifyListeners("onSuccessForGoogle", payload, true);
                     }
 
                     @Override
-                    public void onFailureForGoogle(int errorCode, String message) {
+                    public void onFailureForWallets(int errorCode, Bundle data, GooglePay.WalletType walletType) {
                         JSObject payload = new JSObject();
                         payload.put("errorCode", errorCode);
-                        payload.put("message", message);
+
+                        JSObject bundleObj = new JSObject();
+                        for (String key : data.keySet()) {
+                          Object v = data.get(key);
+                          if (v != null) bundleObj.put(key, v.toString());
+                        }
+                        payload.put("data", bundleObj);
+                        payload.put("walletType", walletType.toString());
 
                         notifyListeners("onFailureForGoogle", payload, true);
                     }
@@ -129,13 +137,18 @@ public class GooglePayPlugin extends Plugin {
     }
 
     @PluginMethod
-    public void getWalletInformation(PluginCall call) {
-        implementation.getWalletInformation(call);
+    public void getGoogleWalletInformation(PluginCall call) {
+        implementation.getGoogleWalletInformation(call);
     }
 
     @PluginMethod
-    public void pushToWallet(PluginCall call) throws Exception {
-        implementation.pushToWallet(call);
+    public void pushToGoogleWallet(PluginCall call) throws Exception {
+        implementation.pushToGoogleWallet(call);
+    }
+
+    @PluginMethod
+    public void continuePendingTokenize(PluginCall call) throws Exception {
+        implementation.continuePendingTokenize(call);
     }
 
     @Override
