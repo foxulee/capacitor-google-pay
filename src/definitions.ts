@@ -143,17 +143,29 @@ export interface GooglePayIsTokenizedOptions {
 
 export interface GoogleWalletRequest {
   /**
-   * Sets the Payment Network that should be used for the tokenization attempt (see TokenServiceProvider).
+   * Sets the Cardholder First Name that should be used for the tokenization attempt (see TokenServiceProvider).
    *
    * @since 1.0.0
    */
-  paymentNetwork: string;
+  cardholderFirstName: string;
   /**
-   * Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider).
+   * Sets the Cardholder Last Name that should be used for the tokenization attempt (see TokenServiceProvider).
    *
    * @since 1.0.0
    */
-  cardHolderName: string;
+  cardholderLastName: string;
+  /**
+   * Sets the Locale Language that should be used for the tokenization attempt (see TokenServiceProvider).
+   *
+   * @since 1.0.0
+   */
+  localeLanguage: string;
+  /**
+   * Sets the Locale Country that should be used for the tokenization attempt (see TokenServiceProvider).
+   *
+   * @since 1.0.0
+   */
+  localeCountry: string;
   /**
    * Sets the Card Nickname that should be used for the tokenization attempt (see TokenServiceProvider).
    *

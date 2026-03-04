@@ -433,12 +433,14 @@ pushToGoogleWallet(option: { response: string; }) => Promise<any>
 
 #### GoogleWalletRequest
 
-| Prop                  | Type                | Description                                                                                           | Since |
-| --------------------- | ------------------- | ----------------------------------------------------------------------------------------------------- | ----- |
-| **`paymentNetwork`**  | <code>string</code> | Sets the Payment Network that should be used for the tokenization attempt (see TokenServiceProvider). | 1.0.0 |
-| **`cardHolderName`**  | <code>string</code> | Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider). | 1.0.0 |
-| **`cardNickName`**    | <code>string</code> | Sets the Card Nickname that should be used for the tokenization attempt (see TokenServiceProvider).   | 1.0.0 |
-| **`last4CardNumber`** | <code>string</code> | Sets the Card Last4 that should be used for the tokenization attempt (see TokenServiceProvider).      | 1.0.0 |
+| Prop                      | Type                | Description                                                                                                 | Since |
+| ------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------- | ----- |
+| **`cardholderFirstName`** | <code>string</code> | Sets the Cardholder First Name that should be used for the tokenization attempt (see TokenServiceProvider). | 1.0.0 |
+| **`cardholderLastName`**  | <code>string</code> | Sets the Cardholder Last Name that should be used for the tokenization attempt (see TokenServiceProvider).  | 1.0.0 |
+| **`localeLanguage`**      | <code>string</code> | Sets the Locale Language that should be used for the tokenization attempt (see TokenServiceProvider).       | 1.0.0 |
+| **`localeCountry`**       | <code>string</code> | Sets the Locale Country that should be used for the tokenization attempt (see TokenServiceProvider).        | 1.0.0 |
+| **`cardNickName`**        | <code>string</code> | Sets the Card Nickname that should be used for the tokenization attempt (see TokenServiceProvider).         | 1.0.0 |
+| **`last4CardNumber`**     | <code>string</code> | Sets the Card Last4 that should be used for the tokenization attempt (see TokenServiceProvider).            | 1.0.0 |
 
 
 #### GoogleTokenizationRequest

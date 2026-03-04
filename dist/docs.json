@@ -762,26 +762,50 @@
       "methods": [],
       "properties": [
         {
-          "name": "paymentNetwork",
+          "name": "cardholderFirstName",
           "tags": [
             {
               "text": "1.0.0",
               "name": "since"
             }
           ],
-          "docs": "Sets the Payment Network that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "docs": "Sets the Cardholder First Name that should be used for the tokenization attempt (see TokenServiceProvider).",
           "complexTypes": [],
           "type": "string"
         },
         {
-          "name": "cardHolderName",
+          "name": "cardholderLastName",
           "tags": [
             {
               "text": "1.0.0",
               "name": "since"
             }
           ],
-          "docs": "Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "docs": "Sets the Cardholder Last Name that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "localeLanguage",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the Locale Language that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "localeCountry",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the Locale Country that should be used for the tokenization attempt (see TokenServiceProvider).",
           "complexTypes": [],
           "type": "string"
         },
