@@ -41,6 +41,7 @@ npx cap sync
 * [`registerDataChangedListener()`](#registerdatachangedlistener)
 * [`getWalletInformation(...)`](#getwalletinformation)
 * [`pushToWallet(...)`](#pushtowallet)
+* [`continuePendingTokenize(...)`](#continuependingtokenize)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
 * [Enums](#enums)
@@ -364,6 +365,21 @@ pushToWallet(option: { response: string; }) => Promise<any>
 --------------------
 
 
+### continuePendingTokenize(...)
+
+```typescript
+continuePendingTokenize(option: GoogleWalletPendingTokenizeRequest) => Promise<any>
+```
+
+| Param        | Type                                                                                              |
+| ------------ | ------------------------------------------------------------------------------------------------- |
+| **`option`** | <code><a href="#googlewalletpendingtokenizerequest">GoogleWalletPendingTokenizeRequest</a></code> |
+
+**Returns:** <code>Promise&lt;any&gt;</code>
+
+--------------------
+
+
 ### Interfaces
 
 
@@ -423,6 +439,15 @@ pushToWallet(option: { response: string; }) => Promise<any>
 | **`cardHolderName`**  | <code>string</code> | Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider). | 1.0.0 |
 | **`cardNickName`**    | <code>string</code> | Sets the Card Nickname that should be used for the tokenization attempt (see TokenServiceProvider).   | 1.0.0 |
 | **`last4CardNumber`** | <code>string</code> | Sets the Card Last4 that should be used for the tokenization attempt (see TokenServiceProvider).      | 1.0.0 |
+
+
+#### GoogleWalletPendingTokenizeRequest
+
+| Prop                   | Type                | Description                                                                                             | Since |
+| ---------------------- | ------------------- | ------------------------------------------------------------------------------------------------------- | ----- |
+| **`tokenReferenceId`** | <code>string</code> | Sets the Token ReferenceId that should be used for the tokenization attempt (see TokenServiceProvider). | 1.0.0 |
+| **`paymentNetwork`**   | <code>string</code> | Sets the Payment Network that should be used for the tokenization attempt (see TokenServiceProvider).   | 1.0.0 |
+| **`cardHolderName`**   | <code>string</code> | Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider).   | 1.0.0 |
 
 
 ### Type Aliases

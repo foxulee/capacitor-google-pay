@@ -42,6 +42,9 @@ export class GooglePayWeb extends WebPlugin {
     pushToWallet() {
         throw this.unimplemented('Not implemented on web.');
     }
+    continuePendingTokenize() {
+        throw this.unimplemented('Not implemented on web.');
+    }
     registerDataChangedListener() {
         throw this.unimplemented('Not implemented on web.');
     }

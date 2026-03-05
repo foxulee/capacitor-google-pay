@@ -148,6 +148,26 @@ export interface GoogleWalletRequest {
      */
     last4CardNumber: string;
 }
+export interface GoogleWalletPendingTokenizeRequest {
+    /**
+     * Sets the Token ReferenceId that should be used for the tokenization attempt (see TokenServiceProvider).
+     *
+     * @since 1.0.0
+     */
+    tokenReferenceId: string;
+    /**
+     * Sets the Payment Network that should be used for the tokenization attempt (see TokenServiceProvider).
+     *
+     * @since 1.0.0
+     */
+    paymentNetwork: string;
+    /**
+     * Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider).
+     *
+     * @since 1.0.0
+     */
+    cardHolderName: string;
+}
 export interface GooglePayTokenOptions {
     /**
      * Sets the TSP that should be used for the tokenization attempt (see TokenServiceProvider).
@@ -327,4 +347,5 @@ export interface GooglePayPlugin {
     pushToWallet(option: {
         response: string;
     }): Promise<any>;
+    continuePendingTokenize(option: GoogleWalletPendingTokenizeRequest): Promise<any>;
 }

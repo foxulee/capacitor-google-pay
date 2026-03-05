@@ -735,6 +735,38 @@ public class GooglePay {
                 REQUEST_CODE_PUSH_TOKENIZE);
     }
 
+  public void continuePendingTokenize(PluginCall call) {
+    String tokenReferenceId = call.getString("tokenReferenceId");
+    String paymentNetwork = call.getString("paymentNetwork");
+    String cardHolderName = call.getString("cardHolderName");
+    int tokenProvider = 0, cardNetwork = 0;
+    switch (paymentNetwork) {
+      case VISA:
+        tokenProvider = TapAndPay.TOKEN_PROVIDER_VISA;
+        cardNetwork = TapAndPay.CARD_NETWORK_VISA;
+        break;
+      case AMEX:
+        tokenProvider = TapAndPay.TOKEN_PROVIDER_AMEX;
+        cardNetwork = TapAndPay.CARD_NETWORK_AMEX;
+        break;
+      case DISCOVER:
+        tokenProvider = TapAndPay.TOKEN_PROVIDER_DISCOVER;
+        cardNetwork = TapAndPay.CARD_NETWORK_DISCOVER;
+        break;
+      case MASTERCARD:
+        tokenProvider = TapAndPay.TOKEN_PROVIDER_MASTERCARD;
+        cardNetwork = TapAndPay.CARD_NETWORK_MASTERCARD;
+        break;
+    }
+    this.tapAndPay.tokenize(
+      bridge.getActivity(),
+      tokenReferenceId,
+      tokenProvider,
+      cardHolderName,
+      cardNetwork,
+      REQUEST_CODE_PUSH_TOKENIZE);
+  }
+
     private void getInformation(final String paymentNetwork, final String cardHolderName, final String cardNickName) {
         this.tapAndPay
             .getActiveWalletId()

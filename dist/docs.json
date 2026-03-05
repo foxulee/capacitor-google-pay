@@ -473,6 +473,24 @@
         "docs": "",
         "complexTypes": [],
         "slug": "pushtowallet"
+      },
+      {
+        "name": "continuePendingTokenize",
+        "signature": "(option: GoogleWalletPendingTokenizeRequest) => Promise<any>",
+        "parameters": [
+          {
+            "name": "option",
+            "docs": "",
+            "type": "GoogleWalletPendingTokenizeRequest"
+          }
+        ],
+        "returns": "Promise<any>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "GoogleWalletPendingTokenizeRequest"
+        ],
+        "slug": "continuependingtokenize"
       }
     ],
     "properties": []
@@ -788,6 +806,51 @@
             }
           ],
           "docs": "Sets the Card Last4 that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "GoogleWalletPendingTokenizeRequest",
+      "slug": "googlewalletpendingtokenizerequest",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "tokenReferenceId",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the Token ReferenceId that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "paymentNetwork",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the Payment Network that should be used for the tokenization attempt (see TokenServiceProvider).",
+          "complexTypes": [],
+          "type": "string"
+        },
+        {
+          "name": "cardHolderName",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Sets the Cardholder Name that should be used for the tokenization attempt (see TokenServiceProvider).",
           "complexTypes": [],
           "type": "string"
         }

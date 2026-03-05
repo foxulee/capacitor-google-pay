@@ -138,6 +138,11 @@ public class GooglePayPlugin extends Plugin {
         implementation.pushToWallet(call);
     }
 
+    @PluginMethod
+    public void continuePendingTokenize(PluginCall call) {
+        implementation.continuePendingTokenize(call);
+    }
+
     @Override
     @PluginMethod
     public void removeAllListeners(PluginCall call) {
