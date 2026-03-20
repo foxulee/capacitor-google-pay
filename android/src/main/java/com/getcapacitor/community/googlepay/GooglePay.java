@@ -1,5 +1,7 @@
 package com.getcapacitor.community.googlepay;
 
+import static com.google.android.gms.tapandpay.TapAndPay.TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION;
+import static com.google.android.gms.tapandpay.TapAndPay.TOKEN_STATE_UNTOKENIZED;
 import static com.google.android.gms.tapandpay.TapAndPayStatusCodes.TAP_AND_PAY_NO_ACTIVE_WALLET;
 import static com.google.android.gms.tapandpay.TapAndPayStatusCodes.TAP_AND_PAY_TOKEN_NOT_FOUND;
 
@@ -27,10 +29,12 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tapandpay.TapAndPay;
 import com.google.android.gms.tapandpay.TapAndPayClient;
 import com.google.android.gms.tapandpay.issuer.IsTokenizedRequest;
+import com.google.android.gms.tapandpay.issuer.ListTokensRequest;
 import com.google.android.gms.tapandpay.issuer.PushTokenizeRequest;
 import com.google.android.gms.tapandpay.issuer.TokenInfo;
 import com.google.android.gms.tapandpay.issuer.UserAddress;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 
 import org.json.JSONObject;
@@ -652,9 +656,43 @@ public class GooglePay {
         String cardHolderName = call.getString("cardHolderName");
         String cardNickName = call.getString("cardNickName");
         String last4CardNumber = call.getString("last4CardNumber");
+//
+//        try{
+//          IsTokenizedRequest tokenizedRequest = new IsTokenizedRequest.Builder()
+//            .setIdentifier(last4CardNumber)
+//            .setNetwork(TapAndPay.CARD_NETWORK_MASTERCARD)
+//            .setTokenServiceProvider(TapAndPay.TOKEN_PROVIDER_MASTERCARD)
+//            .build();
+//          this.tapAndPay.isTokenized(tokenizedRequest)
+//            .addOnCompleteListener(
+//              new OnCompleteListener<Boolean>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Boolean> task) {
+//                  if (task.isSuccessful()) {
+//                    if (task.getResult()) {
+//                      Log.d(TAG, "Found a token with last four digits 1234.");
+//                    }
+//                  }
+//                }
+//              })
+//            .addOnFailureListener(
+//              new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                  Log.d("Error", e.getMessage());
+//                }
+//              }
+//            );
+//        }
+//        catch (Exception e){
+//          call.reject(e.getMessage());
+//        }
+
+
         try{
+          ListTokensRequest request = new ListTokensRequest.Builder().build();
             this.tapAndPay
-                .listTokens()
+                .listTokens(request)
                 .addOnCompleteListener(
                     new OnCompleteListener<List<TokenInfo>>() {
                         @Override
@@ -664,11 +702,11 @@ public class GooglePay {
                                     if (TextUtils.equals(token.getFpanLastFour(), last4CardNumber)) {
                                         if (token.getTokenState() == TapAndPay.TOKEN_STATE_ACTIVE || token.getTokenState() == TapAndPay.TOKEN_STATE_PENDING || token.getTokenState() == TapAndPay.TOKEN_STATE_SUSPENDED) {
                                             sendErrorStatus(ERROR_CODE_CARD_EXISTS_IN_WALLET, ERROR_MESSAGE_CARD_EXISTS);
-                                        } else if (token.getTokenState() == TapAndPay.TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION) {
+                                        } else if (token.getTokenState() == TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION) {
                                             Bundle responseBundle = new Bundle();
                                             responseBundle.putString(PENDING_VERIFICATION_TOKEN, token.getIssuerTokenId());
                                             if (googleUtilityListener != null)
-                                                googleUtilityListener.onSuccessForGoogle(EXCEPTION_TOKEN_PENDING_STATE, responseBundle);
+                                                googleUtilityListener.onSuccessForGoogle(TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION, responseBundle);
 
                                         }
                                         return;
@@ -729,6 +767,14 @@ public class GooglePay {
                 .setDisplayName(opcResponse.getDisplayName())
                 .setLastDigits(opcResponse.getLastDigits())
                 .build();
+
+      Log.i(TAG, "PUSHPROVISION --- 2");
+      this.bridge.saveCall(call);
+      this.callBackId = call.getCallbackId();
+      call.setKeepAlive(true);
+      // Start the Activity for result using the name of the callback method
+      Log.i(TAG, "PUSHPROVISION --- 3");
+
         this.tapAndPay.pushTokenize(
                 bridge.getActivity(),
                 pushTokenizeRequest,
@@ -788,7 +834,7 @@ public class GooglePay {
                                                                 Bundle responseBundle = new Bundle();
                                                                 responseBundle.putString(PASSTHRUFROMAPP_WALLET_INFORMATION, base64JsonString);
                                                                 if (googleUtilityListener != null)
-                                                                    googleUtilityListener.onSuccessForGoogle(REQUEST_WALLET_INFORMATION, responseBundle);
+                                                                    googleUtilityListener.onSuccessForGoogle(TOKEN_STATE_UNTOKENIZED, responseBundle);
                                                             } catch (Exception e) {
                                                                 sendErrorStatus(ERROR_CODE_JSON_FORMATTING_EXCEPTION, ERROR_MESSAGE_JSON_FORMATTING_EXCEPTION);
                                                             }
