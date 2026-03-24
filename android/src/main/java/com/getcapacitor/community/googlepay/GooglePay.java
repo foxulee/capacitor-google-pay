@@ -1,5 +1,6 @@
 package com.getcapacitor.community.googlepay;
 
+import static com.google.android.gms.tapandpay.TapAndPay.TOKEN_STATE_ACTIVE;
 import static com.google.android.gms.tapandpay.TapAndPay.TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION;
 import static com.google.android.gms.tapandpay.TapAndPay.TOKEN_STATE_UNTOKENIZED;
 import static com.google.android.gms.tapandpay.TapAndPayStatusCodes.TAP_AND_PAY_NO_ACTIVE_WALLET;
@@ -80,7 +81,7 @@ public class GooglePay {
     private final Bridge bridge;
     public String callBackId;
     public String dataChangeCallBackId;
-    // protected static final int REQUEST_CODE_PUSH_TOKENIZE = 3;
+    protected static final int REQUEST_CODE_PUSH_TOKENIZE = 3;
     protected static final int REQUEST_CODE_CREATE_WALLET = 4;
     protected static final int REQUEST_CODE_ACTION_TOKEN = 5;
     protected static final int RESULT_CANCELED = 0;
@@ -89,7 +90,7 @@ public class GooglePay {
 
 
     public static final int REQUEST_CREATE_WALLET = 100;
-    public static final int REQUEST_CODE_PUSH_TOKENIZE = 200;
+//    public static final int REQUEST_CODE_PUSH_TOKENIZE = 200;
     public static final int REQUEST_WALLET_INFORMATION = 300;
     public static final int EXCEPTION_TOKEN_PENDING_STATE = 400;
 
@@ -188,7 +189,7 @@ public class GooglePay {
         PluginCall call = this.bridge.getSavedCall(callBackId);
 
         if (call == null) {
-            return;
+            //return;
         }
 
         JSObject result = new JSObject();
@@ -209,7 +210,17 @@ public class GooglePay {
                 // The action succeeded.
                 String tokenId = data.getStringExtra(TapAndPay.EXTRA_ISSUER_TOKEN_ID);
                 result.put("tokenId", tokenId);
-                call.resolve(result);
+                if(call != null){
+//                  call.resolve(result);
+                  Bundle responseBundle = new Bundle();
+                  responseBundle.putString("tokenId", tokenId);
+                  googleUtilityListener.onSuccessForGoogle(TOKEN_STATE_ACTIVE, responseBundle);
+                } else {
+                  Bundle responseBundle = new Bundle();
+                  responseBundle.putString("tokenId", tokenId);
+                  googleUtilityListener.onSuccessForGoogle(TOKEN_STATE_ACTIVE, responseBundle);
+                }
+
             }
         } else if (requestCode == REQUEST_CODE_ACTION_TOKEN) {
             Log.i(TAG, "ACTION_TOKEN --- ");
@@ -768,12 +779,12 @@ public class GooglePay {
                 .setLastDigits(opcResponse.getLastDigits())
                 .build();
 
-      Log.i(TAG, "PUSHPROVISION --- 2");
-      this.bridge.saveCall(call);
-      this.callBackId = call.getCallbackId();
-      call.setKeepAlive(true);
-      // Start the Activity for result using the name of the callback method
-      Log.i(TAG, "PUSHPROVISION --- 3");
+        Log.i(TAG, "PUSHPROVISION --- 2");
+        this.bridge.saveCall(call);
+        this.callBackId = call.getCallbackId();
+        call.setKeepAlive(true);
+        // Start the Activity for result using the name of the callback method
+        Log.i(TAG, "PUSHPROVISION --- 3");
 
         this.tapAndPay.pushTokenize(
                 bridge.getActivity(),
@@ -804,6 +815,14 @@ public class GooglePay {
         cardNetwork = TapAndPay.CARD_NETWORK_MASTERCARD;
         break;
     }
+    Log.i(TAG, "CONTINUE PUSHPROVISION --- 2");
+    this.bridge.saveCall(call);
+    this.callBackId = call.getCallbackId();
+    call.setKeepAlive(true);
+
+    // Start the Activity for result using the name of the callback method
+    Log.i(TAG, "CONTINUE PUSHPROVISION --- 3");
+
     this.tapAndPay.tokenize(
       bridge.getActivity(),
       tokenReferenceId,
